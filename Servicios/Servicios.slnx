@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Clases/Clases.csproj" />
+  <Project Path="Cuestionarios/Cuestionarios.csproj" />
+  <Project Path="Estadisticas/Estadisticas.csproj" />
+</Solution>

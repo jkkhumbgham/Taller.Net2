@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  monolito:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: estadisticas-monolito
+    ports:
+      - "5001:5001"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__UserDb=Host=host.docker.internal;Port=5433;Database=user_db;Username=user_user;Password=user_pass
+      - ConnectionStrings__ContentDb=Host=host.docker.internal;Port=5432;Database=content_db;Username=content_user;Password=content_pass

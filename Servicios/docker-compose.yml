@@ -1,0 +1,38 @@
+version: '3.8'
+services:
+  cuestionarios:
+    build:
+      context: ./Cuestionarios
+      dockerfile: Dockerfile
+    container_name: svc-cuestionarios
+    ports:
+      - "5020:5020"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - ConnectionStrings__UserDb=Host=host.docker.internal;Port=5433;Database=user_db;Username=user_user;Password=user_pass
+      - ConnectionStrings__ContentDb=Host=host.docker.internal;Port=5432;Database=content_db;Username=content_user;Password=content_pass
+  clases:
+    build:
+      context: ./Clases
+      dockerfile: Dockerfile
+    container_name: svc-clases
+    ports:
+      - "5021:5021"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - ConnectionStrings__UserDb=Host=host.docker.internal;Port=5433;Database=user_db;Username=user_user;Password=user_pass
+      - ConnectionStrings__ContentDb=Host=host.docker.internal;Port=5432;Database=content_db;Username=content_user;Password=content_pass
+  estadisticas:
+    build:
+      context: ./Estadisticas
+      dockerfile: Dockerfile
+    container_name: svc-estadisticas
+    ports:
+      - "5022:5022"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - ConnectionStrings__UserDb=Host=host.docker.internal;Port=5433;Database=user_db;Username=user_user;Password=user_pass
+      - ConnectionStrings__ContentDb=Host=host.docker.internal;Port=5432;Database=content_db;Username=content_user;Password=content_pass

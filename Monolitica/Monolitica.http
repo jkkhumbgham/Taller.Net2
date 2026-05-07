@@ -1,0 +1,6 @@
+@Monolitica_HostAddress = http://localhost:5197
+
+GET {{Monolitica_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

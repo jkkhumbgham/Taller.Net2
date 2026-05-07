@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="ClasesMasTomadas/ClasesMasTomadas.csproj" />
+  <Project Path="CursosAcabados/CursosAcabados.csproj" />
+  <Project Path="MejoresEstudiantes/MejoresEstudiantes.csproj" />
+  <Project Path="Notas/Notas.csproj" />
+</Solution>
