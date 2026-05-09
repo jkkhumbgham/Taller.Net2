@@ -6,6 +6,6 @@ RUN dotnet publish Monolitica.csproj -c Release -o /app/publish --no-self-contai
 FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /app
 COPY --from=build /app/publish .
-ENV ASPNETCORE_URLS=http://+:5001
-EXPOSE 5001
+ENV ASPNETCORE_URLS=http://+:8080
+EXPOSE 8080
 ENTRYPOINT ["dotnet", "Monolitica.dll"]

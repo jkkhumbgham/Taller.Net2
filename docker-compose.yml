@@ -1,5 +1,3 @@
-version: "3.9"
-
 networks:
   stats-network:
     driver: bridge
@@ -71,11 +69,11 @@ services:
         condition: service_healthy
 
   # ─────────────────────────────────────────────────────────
-  # Architecture 2: Servicios  (port 5002)
+  # Architecture 2: Servicios SOA
   # ─────────────────────────────────────────────────────────
-  servicios-api:
+  servicios-estadisticas:
     build:
-      context: ./Servicios/Servicios.API
+      context: ./Servicios/Estadisticas
       dockerfile: Dockerfile
     ports:
       - "5002:8080"
@@ -91,12 +89,48 @@ services:
       user_db:
         condition: service_healthy
 
+  servicios-clases:
+    build:
+      context: ./Servicios/Clases
+      dockerfile: Dockerfile
+    ports:
+      - "5003:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__UserDb=Host=user_db;Port=5432;Database=user_db;Username=user_user;Password=user_pass
+      - ConnectionStrings__ContentDb=Host=content_db;Port=5432;Database=content_db;Username=content_user;Password=content_pass
+    networks:
+      - stats-network
+    depends_on:
+      content_db:
+        condition: service_healthy
+      user_db:
+        condition: service_healthy
+
+  servicios-cuestionarios:
+    build:
+      context: ./Servicios/Cuestionarios
+      dockerfile: Dockerfile
+    ports:
+      - "5004:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__UserDb=Host=user_db;Port=5432;Database=user_db;Username=user_user;Password=user_pass
+      - ConnectionStrings__ContentDb=Host=content_db;Port=5432;Database=content_db;Username=content_user;Password=content_pass
+    networks:
+      - stats-network
+    depends_on:
+      content_db:
+        condition: service_healthy
+      user_db:
+        condition: service_healthy
+
   # ─────────────────────────────────────────────────────────
   # Architecture 3: MicroServicios
   # ─────────────────────────────────────────────────────────
-  ms-inscripcion:
+  ms-clases-mas-tomadas:
     build:
-      context: ./MicroServicios/EstadisticasInscripcion
+      context: ./MicroServicios/ClasesMasTomadas
       dockerfile: Dockerfile
     ports:
       - "5010:8080"
@@ -112,9 +146,9 @@ services:
       user_db:
         condition: service_healthy
 
-  ms-lecciones:
+  ms-cursos-acabados:
     build:
-      context: ./MicroServicios/EstadisticasLecciones
+      context: ./MicroServicios/CursosAcabados
       dockerfile: Dockerfile
     ports:
       - "5011:8080"
@@ -130,12 +164,30 @@ services:
       user_db:
         condition: service_healthy
 
-  ms-cuestionarios:
+  ms-mejores-estudiantes:
     build:
-      context: ./MicroServicios/EstadisticasCuestionarios
+      context: ./MicroServicios/MejoresEstudiantes
       dockerfile: Dockerfile
     ports:
       - "5012:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__UserDb=Host=user_db;Port=5432;Database=user_db;Username=user_user;Password=user_pass
+      - ConnectionStrings__ContentDb=Host=content_db;Port=5432;Database=content_db;Username=content_user;Password=content_pass
+    networks:
+      - stats-network
+    depends_on:
+      content_db:
+        condition: service_healthy
+      user_db:
+        condition: service_healthy
+
+  ms-notas:
+    build:
+      context: ./MicroServicios/Notas
+      dockerfile: Dockerfile
+    ports:
+      - "5013:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__UserDb=Host=user_db;Port=5432;Database=user_db;Username=user_user;Password=user_pass
