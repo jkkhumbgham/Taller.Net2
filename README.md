@@ -578,7 +578,7 @@ docker compose version
 Al usar Docker Compose (Opción B), las bases de datos se inician automáticamente. Si prefieres correr las aplicaciones en local con `dotnet run`, levanta solo los contenedores de base de datos:
 
 ```bash
-cd /home/jkkhumbgham/Documentos/Taller.Net2
+cd "Carpeta general, donde estan las 3 arquitecturas"
 
 # Solo las bases de datos
 docker compose up -d content_db user_db
@@ -600,7 +600,7 @@ user_db      postgres:16   0.0.0.0:5433->5432/tcp   Up (healthy)
 #### Monolítica
 
 ```bash
-cd /home/jkkhumbgham/Documentos/Taller.Net2/Monolitica
+cd /Monolitica
 
 dotnet run
 # Disponible en: http://localhost:5001
@@ -610,17 +610,17 @@ dotnet run
 
 ```bash
 # Terminal 1
-cd /home/jkkhumbgham/Documentos/Taller.Net2/Servicios/Cuestionarios
+cd /Servicios/Cuestionarios
 dotnet run
 # http://localhost:5020
 
 # Terminal 2
-cd /home/jkkhumbgham/Documentos/Taller.Net2/Servicios/Clases
+cd /Servicios/Clases
 dotnet run
 # http://localhost:5021
 
 # Terminal 3
-cd /home/jkkhumbgham/Documentos/Taller.Net2/Servicios/Estadisticas
+cd /Servicios/Estadisticas
 dotnet run
 # http://localhost:5022
 ```
@@ -629,22 +629,22 @@ dotnet run
 
 ```bash
 # Terminal 1
-cd /home/jkkhumbgham/Documentos/Taller.Net2/MicroServicios/Notas
+cd /MicroServicios/Notas
 dotnet run
 # http://localhost:5010
 
 # Terminal 2
-cd /home/jkkhumbgham/Documentos/Taller.Net2/MicroServicios/CursosAcabados
+cd /MicroServicios/CursosAcabados
 dotnet run
 # http://localhost:5011
 
 # Terminal 3
-cd /home/jkkhumbgham/Documentos/Taller.Net2/MicroServicios/ClasesMasTomadas
+cd /MicroServicios/ClasesMasTomadas
 dotnet run
 # http://localhost:5012
 
 # Terminal 4
-cd /home/jkkhumbgham/Documentos/Taller.Net2/MicroServicios/MejoresEstudiantes
+cd /MicroServicios/MejoresEstudiantes
 dotnet run
 # http://localhost:5013
 ```
@@ -658,7 +658,7 @@ dotnet run
 #### Monolítica
 
 ```bash
-cd /home/jkkhumbgham/Documentos/Taller.Net2/Monolitica
+cd /Monolitica
 
 # Construir y levantar
 docker-compose up --build
@@ -680,7 +680,7 @@ Contenedor levantado: `estadisticas-monolito` → `http://localhost:5001`
 #### Servicios
 
 ```bash
-cd /home/jkkhumbgham/Documentos/Taller.Net2/Servicios
+cd /Servicios
 
 # Levantar los 3 servicios
 docker-compose up --build
@@ -712,7 +712,7 @@ Contenedores levantados:
 #### MicroServicios
 
 ```bash
-cd /home/jkkhumbgham/Documentos/Taller.Net2/MicroServicios
+cd /MicroServicios
 
 # Levantar los 4 microservicios
 docker-compose up --build
