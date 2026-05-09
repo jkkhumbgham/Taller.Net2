@@ -1,5 +1,42 @@
 version: '3.8'
+
 services:
+  content_db:
+    image: postgres:16
+    container_name: content_db
+    environment:
+      POSTGRES_DB: content_db
+      POSTGRES_USER: content_user
+      POSTGRES_PASSWORD: content_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - ../db/content:/docker-entrypoint-initdb.d
+      - content_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U content_user -d content_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  user_db:
+    image: postgres:16
+    container_name: user_db
+    environment:
+      POSTGRES_DB: user_db
+      POSTGRES_USER: user_user
+      POSTGRES_PASSWORD: user_pass
+    ports:
+      - "5433:5432"
+    volumes:
+      - ../db/user:/docker-entrypoint-initdb.d
+      - user_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user_user -d user_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
   notas:
     build:
       context: ./Notas
@@ -7,11 +44,15 @@ services:
     container_name: micro-notas
     ports:
       - "5010:5010"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     environment:
-      - ConnectionStrings__UserDb=Host=host.docker.internal;Port=5433;Database=user_db;Username=user_user;Password=user_pass
-      - ConnectionStrings__ContentDb=Host=host.docker.internal;Port=5432;Database=content_db;Username=content_user;Password=content_pass
+      - ConnectionStrings__UserDb=Host=user_db;Port=5432;Database=user_db;Username=user_user;Password=user_pass
+      - ConnectionStrings__ContentDb=Host=content_db;Port=5432;Database=content_db;Username=content_user;Password=content_pass
+    depends_on:
+      content_db:
+        condition: service_healthy
+      user_db:
+        condition: service_healthy
+
   cursos-acabados:
     build:
       context: ./CursosAcabados
@@ -19,11 +60,15 @@ services:
     container_name: micro-cursos-acabados
     ports:
       - "5011:5011"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     environment:
-      - ConnectionStrings__UserDb=Host=host.docker.internal;Port=5433;Database=user_db;Username=user_user;Password=user_pass
-      - ConnectionStrings__ContentDb=Host=host.docker.internal;Port=5432;Database=content_db;Username=content_user;Password=content_pass
+      - ConnectionStrings__UserDb=Host=user_db;Port=5432;Database=user_db;Username=user_user;Password=user_pass
+      - ConnectionStrings__ContentDb=Host=content_db;Port=5432;Database=content_db;Username=content_user;Password=content_pass
+    depends_on:
+      content_db:
+        condition: service_healthy
+      user_db:
+        condition: service_healthy
+
   clases-mas-tomadas:
     build:
       context: ./ClasesMasTomadas
@@ -31,11 +76,15 @@ services:
     container_name: micro-clases-mas-tomadas
     ports:
       - "5012:5012"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     environment:
-      - ConnectionStrings__UserDb=Host=host.docker.internal;Port=5433;Database=user_db;Username=user_user;Password=user_pass
-      - ConnectionStrings__ContentDb=Host=host.docker.internal;Port=5432;Database=content_db;Username=content_user;Password=content_pass
+      - ConnectionStrings__UserDb=Host=user_db;Port=5432;Database=user_db;Username=user_user;Password=user_pass
+      - ConnectionStrings__ContentDb=Host=content_db;Port=5432;Database=content_db;Username=content_user;Password=content_pass
+    depends_on:
+      content_db:
+        condition: service_healthy
+      user_db:
+        condition: service_healthy
+
   mejores-estudiantes:
     build:
       context: ./MejoresEstudiantes
@@ -43,8 +92,15 @@ services:
     container_name: micro-mejores-estudiantes
     ports:
       - "5013:5013"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     environment:
-      - ConnectionStrings__UserDb=Host=host.docker.internal;Port=5433;Database=user_db;Username=user_user;Password=user_pass
-      - ConnectionStrings__ContentDb=Host=host.docker.internal;Port=5432;Database=content_db;Username=content_user;Password=content_pass
+      - ConnectionStrings__UserDb=Host=user_db;Port=5432;Database=user_db;Username=user_user;Password=user_pass
+      - ConnectionStrings__ContentDb=Host=content_db;Port=5432;Database=content_db;Username=content_user;Password=content_pass
+    depends_on:
+      content_db:
+        condition: service_healthy
+      user_db:
+        condition: service_healthy
+
+volumes:
+  content_db_data:
+  user_db_data:

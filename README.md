@@ -22,25 +22,20 @@ Sistema que genera estadísticas de estudiantes sobre los cursos que toman y han
 | .NET SDK | 10.0 | `dotnet --version` |
 | Docker | 24+ | `docker --version` |
 | Docker Compose | v2+ | `docker compose version` |
-| PostgreSQL (vía Docker) | 16 | Contenedores del proyecto Jakarta EE |
+| PostgreSQL (vía Docker) | 16 | Incluido en este proyecto |
 
-Las bases de datos deben estar corriendo antes de ejecutar cualquier implementación. Se levantan desde el proyecto base:
-
-```bash
-cd /home/jkkhumbgham/Documentos/jakartaee-taller3/Desarrollo
-docker-compose up -d content_db user_db
-```
+Las bases de datos se levantan automáticamente junto con las aplicaciones al usar Docker Compose. No se requiere ningún proyecto externo.
 
 ---
 
 ## Bases de datos
 
-El sistema consume dos bases de datos PostgreSQL del proyecto plataforma de cursos:
+El sistema incluye sus propias bases de datos PostgreSQL definidas en `db/`. Los scripts de inicialización crean el esquema y cargan datos de prueba automáticamente al levantar los contenedores por primera vez.
 
-| Base de datos | Puerto host | Usuario | Contraseña | Contenido |
-|---|---|---|---|---|
-| `content_db` | `5432` | `content_user` | `content_pass` | Cursos, módulos, lecciones, cuestionarios |
-| `user_db` | `5433` | `user_user` | `user_pass` | Usuarios, inscripciones, progresos, intentos |
+| Base de datos | Puerto host | Usuario | Contraseña | Contenido | Scripts |
+|---|---|---|---|---|---|
+| `content_db` | `5432` | `content_user` | `content_pass` | Cursos, módulos, lecciones, cuestionarios | `db/content/` |
+| `user_db` | `5433` | `user_user` | `user_pass` | Usuarios, inscripciones, progresos, intentos | `db/user/` |
 
 ### Tablas relevantes
 
@@ -578,27 +573,24 @@ docker --version
 docker compose version
 ```
 
-### Paso 1 — Levantar las bases de datos
+### Paso 1 — Levantar las bases de datos (solo para `dotnet run`)
 
-Las bases de datos son compartidas por las tres implementaciones. Deben estar corriendo antes de iniciar cualquier implementación.
+Al usar Docker Compose (Opción B), las bases de datos se inician automáticamente. Si prefieres correr las aplicaciones en local con `dotnet run`, levanta solo los contenedores de base de datos:
 
 ```bash
-cd /home/jkkhumbgham/Documentos/jakartaee-taller3/Desarrollo
+cd /home/jkkhumbgham/Documentos/Taller.Net2
 
-# Opción A: solo las bases de datos
-docker-compose up -d content_db user_db
+# Solo las bases de datos
+docker compose up -d content_db user_db
 
-# Opción B: todo el proyecto Jakarta (incluye servicios Java)
-docker-compose up -d
-
-# Verificar que están corriendo
+# Verificar que están corriendo y saludables
 docker ps | grep -E "content_db|user_db"
 ```
 
 Resultado esperado:
 ```
-content_db   postgres:16   0.0.0.0:5432->5432/tcp   Up
-user_db      postgres:16   0.0.0.0:5433->5432/tcp   Up
+content_db   postgres:16   0.0.0.0:5432->5432/tcp   Up (healthy)
+user_db      postgres:16   0.0.0.0:5433->5432/tcp   Up (healthy)
 ```
 
 ---
@@ -661,7 +653,7 @@ dotnet run
 
 ### Opción B — Correr con Docker (recomendado)
 
-> **Nota:** Las bases de datos (`content_db` y `user_db`) deben estar levantadas en el host antes de iniciar los contenedores .NET. Los contenedores se conectan a ellas vía `host.docker.internal`.
+> Las bases de datos (`content_db` y `user_db`) se levantan automáticamente junto con los servicios. Los contenedores de la aplicación esperan a que las bases estén saludables antes de arrancar (`depends_on` con `condition: service_healthy`).
 
 #### Monolítica
 
@@ -868,5 +860,5 @@ dotnet build MicroServicios/MicroServicios.slnx
 | MicroServicios | CursosAcabados | **5011** |
 | MicroServicios | ClasesMasTomadas | **5012** |
 | MicroServicios | MejoresEstudiantes | **5013** |
-| (Externo) | content_db (PostgreSQL) | **5432** |
-| (Externo) | user_db (PostgreSQL) | **5433** |
+| Bases de datos | content_db (PostgreSQL) | **5432** |
+| Bases de datos | user_db (PostgreSQL) | **5433** |
