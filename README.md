@@ -6,25 +6,11 @@ Sistema que genera estadísticas de estudiantes sobre los cursos que toman y han
 
 ## Índice
 
-1. [Prerequisitos](#prerequisitos)
-2. [Bases de datos](#bases-de-datos)
-3. [Arquitectura Monolítica](#arquitectura-monolítica)
-4. [Arquitectura de Servicios](#arquitectura-de-servicios)
-5. [Arquitectura de MicroServicios](#arquitectura-de-microservicios)
-6. [Guía de comandos](#guía-de-comandos)
-
----
-
-## Prerequisitos
-
-| Herramienta | Versión | Verificar |
-|---|---|---|
-| .NET SDK | 10.0 | `dotnet --version` |
-| Docker | 24+ | `docker --version` |
-| Docker Compose | v2+ | `docker compose version` |
-| PostgreSQL (vía Docker) | 16 | Incluido en este proyecto |
-
-Las bases de datos se levantan automáticamente junto con las aplicaciones al usar Docker Compose. No se requiere ningún proyecto externo.
+1. [Bases de datos](#bases-de-datos)
+2. [Arquitectura Monolítica](#arquitectura-monolítica)
+3. [Arquitectura de Servicios](#arquitectura-de-servicios)
+4. [Arquitectura de MicroServicios](#arquitectura-de-microservicios)
+5. [Guía de comandos](#guía-de-comandos)
 
 ---
 
@@ -141,65 +127,7 @@ Monolitica/
 └── docker-compose.yml
 ```
 
-### Responsabilidades de cada clase
-
-#### Capa de Datos
-
-| Clase | Responsabilidad |
-|---|---|
-| `UserDbContext` | Contexto EF Core para `user_db`. Registra los DbSets de `Usuario`, `Inscripcion`, `ProgresoLeccion`, `IntentoCuestionario`, `IntentoRespuesta`. Aplica `UseSnakeCaseNamingConvention()`. |
-| `ContentDbContext` | Contexto EF Core para `content_db`. Registra `Curso`, `Modulo`, `Leccion`, `Cuestionario`. Aplica `UseSnakeCaseNamingConvention()`. |
-| `Usuario` | Entidad que mapea la tabla `users`. Campos: `Id`, `Name`, `Email`, `Password`, `CreatedAt`. Tiene navegación a inscripciones, progresos e intentos. |
-| `Inscripcion` | Entidad que mapea `enrollments`. Campos: `Id`, `UserId`, `CourseId`, `EnrolledAt`, `Progress` (0–100). |
-| `ProgresoLeccion` | Entidad que mapea `lesson_progress`. Campos: `Id`, `UserId`, `LessonId`, `Status` (NOT_STARTED/IN_PROGRESS/COMPLETED), `ProgressPercent`, `TimeSpent`, `CompletedAt`. |
-| `IntentoCuestionario` | Entidad que mapea `quiz_attempts`. Campos: `Id`, `UserId`, `QuizId`, `Score`, `MaxScore`, `AttemptNumber`, `TimeSpent`, `AttemptedAt`. |
-| `IntentoRespuesta` | Entidad que mapea `question_attempts`. Campos: `Id`, `QuizAttemptId`, `QuestionId`, `IsCorrect`, `TimeSpent`. |
-| `Curso` | Entidad que mapea `courses`. Campos: `Id`, `Title`, `Level`, `Language`, `IsPublished`. Navegación a `Modulos`. |
-| `Modulo` | Entidad que mapea `modules`. Campos: `Id`, `CourseId`, `Title`, `Position`. Navegación a `Lecciones`. |
-| `Leccion` | Entidad que mapea `lessons`. Campos: `Id`, `ModuleId`, `Title`, `Duration`. |
-| `Cuestionario` | Entidad que mapea `quizzes`. Campos: `Id`, `ContentId`, `Title`. |
-| `IRepositorioInscripciones` | Contrato para acceso a datos de inscripciones y usuarios. Define: `ObtenerUsuarioPorId`, `ObtenerInscripcionesPorUsuario`, `ObtenerInscripcionPorUsuarioYCurso`, `ObtenerTodasLasInscripciones`. |
-| `RepositorioInscripciones` | Implementación con EF Core. Inyecta `UserDbContext` y `ContentDbContext`. |
-| `IRepositorioProgresoLecciones` | Contrato para progreso de lecciones y datos de contenido. Define: `ObtenerProgresosPorUsuario`, `ObtenerLeccionesPorCurso`, `ObtenerCursoPorId`, `ObtenerCursosPorIds`. |
-| `RepositorioProgresoLecciones` | Implementación con EF Core. Inyecta ambos contextos. |
-| `IRepositorioIntentosCuestionarios` | Contrato para intentos de cuestionarios. Define: `ObtenerIntentosPorUsuario`, `ObtenerCuestionariosPorIds`, `ObtenerTodosLosIntentos`, `ObtenerTodosLosUsuarios`. |
-| `RepositorioIntentosCuestionarios` | Implementación con EF Core. Inyecta `UserDbContext` y `ContentDbContext`. |
-
-#### Capa de Lógica
-
-| Clase | Responsabilidad |
-|---|---|
-| `IServicioEstadisticas` | Contrato que define los 9 métodos de estadísticas. No depende de EF Core ni de contextos. |
-| `ServicioEstadisticas` | Implementación de la lógica de negocio. Inyecta las 3 interfaces de repositorio. Agrega, calcula y transforma datos en DTOs. |
-| `ResumenEstudianteDto` | Respuesta con: `IdEstudiante`, `NombreEstudiante`, `EmailEstudiante`, `TotalCursosInscritos`, `CursosActivos`, `CursosCompletados`, `TotalTiempoInvertido`, `TotalLeccionesCompletadas`, `PromedioCalificacionCuestionarios`. |
-| `EstadisticasCursoDto` | Respuesta por curso: `IdCurso`, `TituloCurso`, `PorcentajeProgreso`, `LeccionesCompletadas`, `TotalLecciones`, `TiempoInvertido`, `FechaInscripcion`, `EstadoCurso`. |
-| `NotaEstudianteDto` | Respuesta por intento: `IdIntento`, `IdCuestionario`, `TituloCuestionario`, `Calificacion`, `CalificacionMaxima`, `PorcentajeCalificacion`, `NumeroIntento`, `FechaIntento`. |
-| `CursoAcabadoDto` | Respuesta de cursos completados: `IdCurso`, `TituloCurso`, `FechaInscripcion`, `FechaCompletado`, `TotalLecciones`, `DuracionTotalSegundos`. |
-| `ClaseMasTomadaDto` | Respuesta de ranking de cursos: `IdCurso`, `TituloCurso`, `TotalInscritos`, `PorcentajeCompletados`. |
-| `MejorEstudianteDto` | Respuesta de ranking de estudiantes: `IdEstudiante`, `NombreEstudiante`, `PromedioCalificacion`, `TotalIntentos`, `CursosCompletados`. |
-
-#### Controlador
-
-| Clase | Responsabilidad |
-|---|---|
-| `EstadisticasController` | Expone los 9 endpoints HTTP GET bajo `/api/stats`. Valida existencia del estudiante y retorna `404` si no existe. Delega toda lógica a `IServicioEstadisticas`. |
-
-### Endpoints
-
-```
-GET /api/stats/students/{userId}                    → Resumen general del estudiante
-GET /api/stats/students/{userId}/courses            → Estadísticas por curso
-GET /api/stats/students/{userId}/courses/{courseId} → Detalle de un curso específico
-GET /api/stats/students/{userId}/quizzes            → Rendimiento en cuestionarios
-GET /api/stats/students/{userId}/lessons            → Progreso por lección
-GET /api/stats/notas/estudiante/{userId}            → Lista de notas con porcentaje
-GET /api/stats/cursos-acabados/estudiante/{userId}  → Cursos completados (progress = 100%)
-GET /api/stats/clases-mas-tomadas                   → Cursos ordenados por inscritos
-GET /api/stats/mejores-estudiantes                  → Ranking por promedio de calificaciones
-```
-
 ---
-
 ## Arquitectura de Servicios
 
 Tres servicios independientes y desplegables por separado. Cada servicio es una aplicación Web API completa con sus propias capas **Datos** y **Lógica** internas. No comparten código.
@@ -323,66 +251,6 @@ Servicios/
 └── docker-compose.yml
 ```
 
-### Responsabilidades de cada clase
-
-#### Servicio Cuestionarios (puerto 5020)
-
-| Clase | Responsabilidad |
-|---|---|
-| `UserDbContext` | Contexto EF Core para `user_db`. Expone `Usuario`, `IntentoCuestionario`, `IntentoRespuesta`. |
-| `ContentDbContext` | Contexto EF Core para `content_db`. Expone solo `Cuestionario`. |
-| `IRepositorioCuestionarios` | Contrato: `ObtenerUsuarioPorId`, `ObtenerTodosLosUsuarios`, `ObtenerIntentosPorUsuario`, `ObtenerTodosLosIntentos`, `ObtenerCuestionariosPorIds`. |
-| `RepositorioCuestionarios` | Implementación con EF Core. Consulta intentos, agrupa por quiz, obtiene metadatos de cuestionarios del `ContentDbContext`. |
-| `IServicioCuestionarios` | Contrato de lógica: `ObtenerNotasEstudianteAsync`, `ObtenerPromedioEstudianteAsync`, `ObtenerMejoresEstudiantesAsync`, `ObtenerTopMejoresEstudiantesAsync`. |
-| `ServicioCuestionarios` | Calcula porcentajes de calificación (`score/maxScore*100`), agrupa intentos por cuestionario, ordena estudiantes por promedio descendente. |
-| `NotaEstudianteDto` | Respuesta: `IdIntento`, `IdCuestionario`, `TituloCuestionario`, `Calificacion`, `CalificacionMaxima`, `PorcentajeCalificacion`, `NumeroIntento`, `FechaIntento`. |
-| `MejorEstudianteDto` | Respuesta de ranking: `IdEstudiante`, `NombreEstudiante`, `PromedioCalificacion`, `TotalIntentos`, `CursosCompletados`. |
-| `CuestionariosController` | Enruta `GET /api/cuestionarios/...`. Retorna `404` si el estudiante no existe. |
-
-#### Servicio Clases (puerto 5021)
-
-| Clase | Responsabilidad |
-|---|---|
-| `UserDbContext` | Contexto para `user_db`. Expone `Usuario`, `Inscripcion`, `ProgresoLeccion`. |
-| `ContentDbContext` | Contexto para `content_db`. Expone `Curso`, `Modulo`, `Leccion`. |
-| `IRepositorioClases` | Contrato: `ObtenerUsuarioPorId`, `ObtenerInscripcionesPorUsuario`, `ObtenerTodasLasInscripciones`, `ObtenerCursoPorId`, `ObtenerCursosPorIds`, `ObtenerLeccionesPorCurso`, `ObtenerProgresosPorUsuarioYLecciones`. |
-| `RepositorioClases` | Implementación con EF Core. Filtra inscripciones con `progress >= 100` para cursos acabados; agrupa inscripciones por `courseId` para ranking. |
-| `IServicioClases` | Contrato de lógica: `ObtenerCursosAcabadosEstudianteAsync`, `ObtenerMasTomadas`, `ObtenerTopMasTomadas`. |
-| `ServicioClases` | Filtra cursos completados (progress = 100), calcula `PorcentajeCompletados` de cada curso, ordena por `TotalInscritos` descendente. |
-| `CursoAcabadoDto` | Respuesta: `IdCurso`, `TituloCurso`, `FechaInscripcion`, `FechaCompletado`, `TotalLecciones`, `DuracionTotalSegundos`. |
-| `ClaseMasTomadaDto` | Respuesta de ranking: `IdCurso`, `TituloCurso`, `TotalInscritos`, `PorcentajeCompletados`. |
-| `ClasesController` | Enruta `GET /api/clases/...`. |
-
-#### Servicio Estadísticas (puerto 5022)
-
-| Clase | Responsabilidad |
-|---|---|
-| `UserDbContext` | Contexto para `user_db`. Expone todas las tablas de actividad del usuario. |
-| `ContentDbContext` | Contexto para `content_db`. Expone toda la jerarquía de contenido. |
-| `IRepositorioEstadisticas` | Contrato unificado: acceso a usuarios, inscripciones, progresos, intentos, cursos y lecciones. |
-| `RepositorioEstadisticas` | Implementación que consulta ambas bases de datos. |
-| `IServicioEstadisticas` | Contrato de lógica: `ObtenerResumenEstudianteAsync`, `ObtenerEstadisticasCursosAsync`, `ObtenerEstadisticasLeccionesAsync`. |
-| `ServicioEstadisticas` | Agrega datos de ambas bases (actividad del usuario + metadatos de contenido) para construir el resumen completo. |
-| `ResumenEstudianteDto` | Respuesta completa del estudiante con métricas consolidadas. |
-| `EstadisticasCursoDto` | Respuesta por curso con progreso, tiempo y lecciones. |
-| `EstadisticasLeccionDto` | Respuesta por lección con estado y tiempo. |
-| `EstadisticasController` | Enruta `GET /api/estadisticas/...`. |
-
-### Endpoints
-
-| Servicio | Método | Ruta | Descripción |
-|---|---|---|---|
-| Cuestionarios | GET | `/api/cuestionarios/notas/estudiante/{userId}` | Todas las notas de un estudiante |
-| Cuestionarios | GET | `/api/cuestionarios/notas/promedio/estudiante/{userId}` | Promedio de calificaciones |
-| Cuestionarios | GET | `/api/cuestionarios/mejores-estudiantes` | Ranking completo por promedio |
-| Cuestionarios | GET | `/api/cuestionarios/mejores-estudiantes/top/{n}` | Top N estudiantes |
-| Clases | GET | `/api/clases/cursos-acabados/estudiante/{userId}` | Cursos completados del estudiante |
-| Clases | GET | `/api/clases/mas-tomadas` | Todos los cursos ordenados por inscritos |
-| Clases | GET | `/api/clases/mas-tomadas/top/{n}` | Top N cursos más populares |
-| Estadísticas | GET | `/api/estadisticas/estudiante/{userId}` | Resumen general del estudiante |
-| Estadísticas | GET | `/api/estadisticas/estudiante/{userId}/cursos` | Estadísticas por curso |
-| Estadísticas | GET | `/api/estadisticas/estudiante/{userId}/lecciones` | Progreso por lección |
-
 ---
 
 ## Arquitectura de MicroServicios
@@ -489,73 +357,6 @@ MicroServicios/
 │
 └── docker-compose.yml
 ```
-
-### Responsabilidades de cada clase
-
-#### Microservicio Notas (puerto 5010)
-
-| Clase | Responsabilidad |
-|---|---|
-| `UserDbContext` | Expone `Usuario` e `IntentoCuestionario` de `user_db`. |
-| `ContentDbContext` | Expone `Cuestionario` de `content_db` para obtener títulos. |
-| `IRepositorioNotas` | Contrato: `ObtenerUsuarioPorId`, `ObtenerIntentosPorUsuario`, `ObtenerCuestionariosPorIds`. |
-| `RepositorioNotas` | Implementación mínima: solo consulta lo necesario para notas. |
-| `IServicioNotas` | Contrato: `ObtenerNotasEstudianteAsync`, `ObtenerPromedioEstudianteAsync`. |
-| `ServicioNotas` | Calcula `PorcentajeCalificacion = (score / maxScore) * 100` por intento. Calcula el promedio general. |
-| `NotaEstudianteDto` | Respuesta: `IdIntento`, `IdCuestionario`, `TituloCuestionario`, `Calificacion`, `CalificacionMaxima`, `PorcentajeCalificacion`, `NumeroIntento`, `FechaIntento`. |
-| `NotasController` | Enruta `GET /api/notas/estudiante/{userId}` y `GET /api/notas/estudiante/{userId}/promedio`. |
-
-#### Microservicio CursosAcabados (puerto 5011)
-
-| Clase | Responsabilidad |
-|---|---|
-| `UserDbContext` | Expone `Usuario`, `Inscripcion`, `ProgresoLeccion` de `user_db`. |
-| `ContentDbContext` | Expone `Curso`, `Modulo`, `Leccion` de `content_db`. |
-| `IRepositorioCursosAcabados` | Contrato: `ObtenerUsuarioPorId`, `ObtenerInscripcionesPorUsuario`, `ObtenerCursoPorId`, `ObtenerLeccionesPorCurso`, `ObtenerProgresosPorUsuarioYLecciones`. |
-| `RepositorioCursosAcabados` | Filtra inscripciones con `progress >= 100`. |
-| `IServicioCursosAcabados` | Contrato: `ObtenerCursosAcabadosEstudianteAsync`, `ObtenerTotalCursosAcabadosAsync`. |
-| `ServicioCursosAcabados` | Determina la `FechaCompletado` como el máximo `completed_at` entre las lecciones del curso. Suma la duración total de lecciones. |
-| `CursoAcabadoDto` | Respuesta: `IdCurso`, `TituloCurso`, `FechaInscripcion`, `FechaCompletado`, `TotalLecciones`, `DuracionTotalSegundos`. |
-| `CursosAcabadosController` | Enruta `GET /api/cursos-acabados/estudiante/{userId}` y `.../total`. |
-
-#### Microservicio ClasesMasTomadas (puerto 5012)
-
-| Clase | Responsabilidad |
-|---|---|
-| `UserDbContext` | Expone únicamente `Inscripcion` de `user_db`. |
-| `ContentDbContext` | Expone `Curso` de `content_db`. |
-| `IRepositorioClasesMasTomadas` | Contrato mínimo: `ObtenerTodasLasInscripciones`, `ObtenerCursosPorIds`. |
-| `RepositorioClasesMasTomadas` | Lee todas las inscripciones y agrupa por `courseId`. |
-| `IServicioClasesMasTomadas` | Contrato: `ObtenerClasesMasTomadas`, `ObtenerTopClasesMasTomadas(n)`. |
-| `ServicioClasesMasTomadas` | Agrupa inscripciones por curso, cuenta inscritos, calcula porcentaje de los que completaron (`progress >= 100`), ordena descendente. |
-| `ClaseMasTomadaDto` | Respuesta: `IdCurso`, `TituloCurso`, `TotalInscritos`, `PorcentajeCompletados`. |
-| `ClasesMasTomadosController` | Enruta `GET /api/clases-mas-tomadas` y `.../top/{n}`. |
-
-#### Microservicio MejoresEstudiantes (puerto 5013)
-
-| Clase | Responsabilidad |
-|---|---|
-| `UserDbContext` | Expone `Usuario`, `IntentoCuestionario`, `Inscripcion` de `user_db`. |
-| `ContentDbContext` | Presente pero no usado directamente en lógica de ranking. |
-| `IRepositorioMejoresEstudiantes` | Contrato: `ObtenerTodosLosIntentos`, `ObtenerTodosLosUsuarios`, `ObtenerTodasLasInscripciones`. |
-| `RepositorioMejoresEstudiantes` | Carga todos los intentos, usuarios e inscripciones en memoria para el cálculo de ranking. |
-| `IServicioMejoresEstudiantes` | Contrato: `ObtenerMejoresEstudiantesAsync`, `ObtenerTopMejoresEstudiantesAsync(n)`. |
-| `ServicioMejoresEstudiantes` | Agrupa intentos por usuario, calcula promedio de `(score/maxScore)*100`, cuenta cursos completados, asigna posición (`Posicion`), ordena descendente. |
-| `MejorEstudianteDto` | Respuesta: `Posicion`, `IdEstudiante`, `NombreEstudiante`, `PromedioCalificacion`, `TotalIntentos`, `CursosCompletados`. |
-| `MejoresEstudiantesController` | Enruta `GET /api/mejores-estudiantes` y `.../top/{n}`. |
-
-### Endpoints
-
-| Microservicio | Método | Ruta | Descripción |
-|---|---|---|---|
-| Notas | GET | `/api/notas/estudiante/{userId}` | Lista de notas por intento |
-| Notas | GET | `/api/notas/estudiante/{userId}/promedio` | Promedio general del estudiante |
-| CursosAcabados | GET | `/api/cursos-acabados/estudiante/{userId}` | Cursos completados del estudiante |
-| CursosAcabados | GET | `/api/cursos-acabados/estudiante/{userId}/total` | Contador de cursos completados |
-| ClasesMasTomadas | GET | `/api/clases-mas-tomadas` | Todos los cursos ordenados por inscritos |
-| ClasesMasTomadas | GET | `/api/clases-mas-tomadas/top/{n}` | Top N cursos más populares |
-| MejoresEstudiantes | GET | `/api/mejores-estudiantes` | Ranking completo de estudiantes |
-| MejoresEstudiantes | GET | `/api/mejores-estudiantes/top/{n}` | Top N mejores estudiantes |
 
 ---
 
