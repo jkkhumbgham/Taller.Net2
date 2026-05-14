@@ -43,7 +43,7 @@ services:
       dockerfile: Dockerfile
     container_name: estadisticas-monolito
     ports:
-      - "5001:5001"
+      - "5001:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__UserDb=Host=user_db;Port=5432;Database=user_db;Username=user_user;Password=user_pass

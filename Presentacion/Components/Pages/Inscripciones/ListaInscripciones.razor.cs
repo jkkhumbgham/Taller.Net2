@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Components;
-using Presentacion.Datos.Repositorios.Interfaces;
 using Presentacion.Modelos.VistaModelos;
+using Presentacion.Servicios.Interfaces;
 
 namespace Presentacion.Components.Pages.Inscripciones;
 
 public partial class ListaInscripciones : ComponentBase
 {
-    [Inject] protected IRepositorioInscripciones RepositorioInscripciones { get; set; } = default!;
+    [Inject] protected IServicioCrud ServicioCrud { get; set; } = default!;
 
     protected IEnumerable<InscripcionVistaModelo> Inscripciones { get; set; } = Enumerable.Empty<InscripcionVistaModelo>();
     protected bool Cargando { get; set; } = true;
@@ -29,7 +29,7 @@ public partial class ListaInscripciones : ComponentBase
         try
         {
             Cargando = true;
-            Inscripciones = await RepositorioInscripciones.ObtenerTodasAsync();
+            Inscripciones = await ServicioCrud.ObtenerTodasInscripcionesAsync();
         }
         catch
         {
@@ -63,14 +63,14 @@ public partial class ListaInscripciones : ComponentBase
         Guardando = true;
         try
         {
-            await RepositorioInscripciones.CrearAsync(NuevoUsuarioId, NuevoCursoId);
+            await ServicioCrud.CrearInscripcionAsync(NuevoUsuarioId, NuevoCursoId);
             MensajeExito = "Inscripción creada correctamente.";
             MostrarFormulario = false;
             await CargarInscripciones();
         }
         catch
         {
-            MensajeError = "Error al crear la inscripción. Verifique que no exista ya esa combinación usuario/curso.";
+            MensajeError = "Error al crear la inscripción.";
         }
         finally
         {
@@ -96,7 +96,7 @@ public partial class ListaInscripciones : ComponentBase
         MostrarConfirmacion = false;
         try
         {
-            var resultado = await RepositorioInscripciones.EliminarAsync(InscripcionAEliminar.Id);
+            var resultado = await ServicioCrud.EliminarInscripcionAsync(InscripcionAEliminar.Id);
             if (resultado)
             {
                 MensajeExito = $"Inscripción #{InscripcionAEliminar.Id} eliminada correctamente.";

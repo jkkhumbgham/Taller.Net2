@@ -1,66 +1,19 @@
 version: '3.8'
 
 services:
-  content_db:
-    image: postgres:16
-    container_name: content_db_presentacion
-    environment:
-      POSTGRES_DB: content_db
-      POSTGRES_USER: content_user
-      POSTGRES_PASSWORD: content_pass
-    ports:
-      - "5432:5432"
-    volumes:
-      - ../db/content:/docker-entrypoint-initdb.d
-      - content_db_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U content_user -d content_db"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-
-  user_db:
-    image: postgres:16
-    container_name: user_db_presentacion
-    environment:
-      POSTGRES_DB: user_db
-      POSTGRES_USER: user_user
-      POSTGRES_PASSWORD: user_pass
-    ports:
-      - "5433:5432"
-    volumes:
-      - ../db/user:/docker-entrypoint-initdb.d
-      - user_db_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user_user -d user_db"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-
   presentacion:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: presentacion
-    ports:
-      - "5030:8080"
+    network_mode: host
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__UserDb=Host=user_db;Port=5432;Database=user_db;Username=user_user;Password=user_pass
-      - ConnectionStrings__ContentDb=Host=content_db;Port=5432;Database=content_db;Username=content_user;Password=content_pass
-      - Arquitecturas__Monolitico__BaseUrl=http://monolito:5001
-      - Arquitecturas__Servicios__ClasesUrl=http://svc-clases:5021
-      - Arquitecturas__Servicios__EstadisticasUrl=http://svc-estadisticas:5022
-      - Arquitecturas__MicroServicios__NotasUrl=http://micro-notas:5010
-      - Arquitecturas__MicroServicios__CursosAcabadosUrl=http://micro-cursos-acabados:5011
-      - Arquitecturas__MicroServicios__ClasesMasTomadosUrl=http://micro-clases-mas-tomadas:5012
-      - Arquitecturas__MicroServicios__MejoresEstudiantesUrl=http://micro-mejores-estudiantes:5013
-    depends_on:
-      content_db:
-        condition: service_healthy
-      user_db:
-        condition: service_healthy
-
-volumes:
-  content_db_data:
-  user_db_data:
+      - ASPNETCORE_HTTP_PORTS=5030
+      - Arquitecturas__Monolitico__GrpcUrl=http://localhost:5001
+      - Arquitecturas__Servicios__ClasesUrl=http://localhost:5021
+      - Arquitecturas__Servicios__EstadisticasUrl=http://localhost:5022
+      - Arquitecturas__MicroServicios__NotasUrl=http://localhost:5010
+      - Arquitecturas__MicroServicios__CursosAcabadosUrl=http://localhost:5011
+      - Arquitecturas__MicroServicios__ClasesMasTomadosUrl=http://localhost:5012
+      - Arquitecturas__MicroServicios__MejoresEstudiantesUrl=http://localhost:5013

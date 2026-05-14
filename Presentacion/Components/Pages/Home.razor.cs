@@ -1,14 +1,11 @@
 using Microsoft.AspNetCore.Components;
-using Presentacion.Datos.Repositorios.Interfaces;
 using Presentacion.Servicios.Interfaces;
 
 namespace Presentacion.Components.Pages;
 
 public partial class Home : ComponentBase, IDisposable
 {
-    [Inject] protected IRepositorioUsuarios RepositorioUsuarios { get; set; } = default!;
-    [Inject] protected IRepositorioCursos RepositorioCursos { get; set; } = default!;
-    [Inject] protected IRepositorioInscripciones RepositorioInscripciones { get; set; } = default!;
+    [Inject] protected IServicioCrud ServicioCrud { get; set; } = default!;
     [Inject] protected IServicioSelectorArquitectura SelectorArquitectura { get; set; } = default!;
 
     protected bool Cargando { get; set; } = true;
@@ -29,12 +26,9 @@ public partial class Home : ComponentBase, IDisposable
         SelectorArquitectura.OnCambio += StateHasChanged;
         try
         {
-            var usuarios = await RepositorioUsuarios.ObtenerTodosAsync();
-            TotalUsuarios = usuarios.Count();
-            var cursos = await RepositorioCursos.ObtenerTodosAsync();
-            TotalCursos = cursos.Count();
-            var inscripciones = await RepositorioInscripciones.ObtenerTodasAsync();
-            TotalInscripciones = inscripciones.Count();
+            TotalUsuarios = await ServicioCrud.ContarUsuariosAsync();
+            TotalCursos = await ServicioCrud.ContarCursosAsync();
+            TotalInscripciones = await ServicioCrud.ContarInscripcionesAsync();
         }
         finally
         {

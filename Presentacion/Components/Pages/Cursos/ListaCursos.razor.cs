@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Components;
-using Presentacion.Datos.Repositorios.Interfaces;
 using Presentacion.Modelos.VistaModelos;
+using Presentacion.Servicios.Interfaces;
 
 namespace Presentacion.Components.Pages.Cursos;
 
 public partial class ListaCursos : ComponentBase
 {
-    [Inject] protected IRepositorioCursos RepositorioCursos { get; set; } = default!;
+    [Inject] protected IServicioCrud ServicioCrud { get; set; } = default!;
 
     protected IEnumerable<CursoVistaModelo> Cursos { get; set; } = Enumerable.Empty<CursoVistaModelo>();
     protected bool Cargando { get; set; } = true;
@@ -25,7 +25,7 @@ public partial class ListaCursos : ComponentBase
         try
         {
             Cargando = true;
-            Cursos = await RepositorioCursos.ObtenerTodosAsync();
+            Cursos = await ServicioCrud.ObtenerTodosCursosAsync();
         }
         catch
         {
@@ -55,7 +55,7 @@ public partial class ListaCursos : ComponentBase
         MostrarConfirmacion = false;
         try
         {
-            var resultado = await RepositorioCursos.EliminarAsync(CursoAEliminar.Id);
+            var resultado = await ServicioCrud.EliminarCursoAsync(CursoAEliminar.Id);
             if (resultado)
             {
                 MensajeExito = $"Curso '{CursoAEliminar.Titulo}' eliminado correctamente.";

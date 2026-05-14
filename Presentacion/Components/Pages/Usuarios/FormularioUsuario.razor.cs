@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Components;
-using Presentacion.Datos.Repositorios.Interfaces;
 using Presentacion.Modelos.VistaModelos;
+using Presentacion.Servicios.Interfaces;
 
 namespace Presentacion.Components.Pages.Usuarios;
 
 public partial class FormularioUsuario : ComponentBase
 {
-    [Inject] protected IRepositorioUsuarios RepositorioUsuarios { get; set; } = default!;
+    [Inject] protected IServicioCrud ServicioCrud { get; set; } = default!;
     [Inject] protected NavigationManager NavigationManager { get; set; } = default!;
 
     [Parameter] public long? Id { get; set; }
@@ -24,7 +24,7 @@ public partial class FormularioUsuario : ComponentBase
         {
             try
             {
-                UsuarioExistente = await RepositorioUsuarios.ObtenerPorIdAsync(Id.Value);
+                UsuarioExistente = await ServicioCrud.ObtenerUsuarioPorIdAsync(Id.Value);
                 if (UsuarioExistente != null)
                 {
                     Modelo = new CrearUsuarioModelo
@@ -67,7 +67,7 @@ public partial class FormularioUsuario : ComponentBase
                     MensajeError = "La contraseña es obligatoria para usuarios nuevos.";
                     return;
                 }
-                await RepositorioUsuarios.CrearAsync(Modelo);
+                await ServicioCrud.CrearUsuarioAsync(Modelo);
             }
             else if (UsuarioExistente != null)
             {
@@ -79,13 +79,13 @@ public partial class FormularioUsuario : ComponentBase
                     Password = string.IsNullOrWhiteSpace(Modelo.Password) ? UsuarioExistente.Password : Modelo.Password,
                     CreadoEn = UsuarioExistente.CreadoEn
                 };
-                await RepositorioUsuarios.ActualizarAsync(actualizado);
+                await ServicioCrud.ActualizarUsuarioAsync(actualizado);
             }
             NavigationManager.NavigateTo("/usuarios");
         }
         catch
         {
-            MensajeError = "Error al guardar el usuario. Verifique que el email no esté en uso.";
+            MensajeError = "Error al guardar el usuario.";
         }
         finally
         {

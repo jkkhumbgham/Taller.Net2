@@ -1,0 +1,131 @@
+syntax = "proto3";
+
+option csharp_namespace = "Monolitica.Grpc";
+
+package crud;
+
+import "google/protobuf/empty.proto";
+
+service CrudGrpc {
+  rpc ListarUsuarios(google.protobuf.Empty) returns (RespuestaUsuarios);
+  rpc ObtenerUsuario(SolicitudId) returns (RespuestaUsuario);
+  rpc CrearUsuario(SolicitudCrearUsuario) returns (RespuestaUsuario);
+  rpc ActualizarUsuario(SolicitudActualizarUsuario) returns (RespuestaExito);
+  rpc EliminarUsuario(SolicitudId) returns (RespuestaExito);
+  rpc ContarUsuarios(google.protobuf.Empty) returns (RespuestaConteo);
+
+  rpc ListarCursos(google.protobuf.Empty) returns (RespuestaCursos);
+  rpc ObtenerCurso(SolicitudId) returns (RespuestaCurso);
+  rpc CrearCurso(SolicitudCrearCurso) returns (RespuestaCurso);
+  rpc ActualizarCurso(SolicitudActualizarCurso) returns (RespuestaExito);
+  rpc EliminarCurso(SolicitudId) returns (RespuestaExito);
+  rpc ContarCursos(google.protobuf.Empty) returns (RespuestaConteo);
+
+  rpc ListarInscripciones(google.protobuf.Empty) returns (RespuestaInscripciones);
+  rpc CrearInscripcion(SolicitudCrearInscripcion) returns (RespuestaInscripcion);
+  rpc EliminarInscripcion(SolicitudId) returns (RespuestaExito);
+  rpc ContarInscripciones(google.protobuf.Empty) returns (RespuestaConteo);
+}
+
+message SolicitudId {
+  int64 id = 1;
+}
+
+message RespuestaExito {
+  bool exito = 1;
+}
+
+message RespuestaConteo {
+  int32 total = 1;
+}
+
+// Usuarios
+message MensajeUsuario {
+  int64 id = 1;
+  string nombre = 2;
+  string email = 3;
+  string password = 4;
+  string creado_en = 5;
+}
+
+message SolicitudCrearUsuario {
+  string nombre = 1;
+  string email = 2;
+  string password = 3;
+}
+
+message SolicitudActualizarUsuario {
+  int64 id = 1;
+  string nombre = 2;
+  string email = 3;
+  string password = 4;
+}
+
+message RespuestaUsuario {
+  bool encontrado = 1;
+  MensajeUsuario usuario = 2;
+}
+
+message RespuestaUsuarios {
+  repeated MensajeUsuario usuarios = 1;
+}
+
+// Cursos
+message MensajeCurso {
+  int64 id = 1;
+  string titulo = 2;
+  string descripcion = 3;
+  string nivel = 4;
+  string idioma = 5;
+  bool es_publicado = 6;
+  string creado_en = 7;
+  string actualizado_en = 8;
+}
+
+message SolicitudCrearCurso {
+  string titulo = 1;
+  string descripcion = 2;
+  string nivel = 3;
+  string idioma = 4;
+  bool es_publicado = 5;
+}
+
+message SolicitudActualizarCurso {
+  int64 id = 1;
+  string titulo = 2;
+  string descripcion = 3;
+  string nivel = 4;
+  string idioma = 5;
+  bool es_publicado = 6;
+}
+
+message RespuestaCurso {
+  bool encontrado = 1;
+  MensajeCurso curso = 2;
+}
+
+message RespuestaCursos {
+  repeated MensajeCurso cursos = 1;
+}
+
+// Inscripciones
+message MensajeInscripcion {
+  int64 id = 1;
+  int64 usuario_id = 2;
+  int64 curso_id = 3;
+  string inscrito_en = 4;
+  double progreso = 5;
+}
+
+message SolicitudCrearInscripcion {
+  int64 usuario_id = 1;
+  int64 curso_id = 2;
+}
+
+message RespuestaInscripcion {
+  MensajeInscripcion inscripcion = 1;
+}
+
+message RespuestaInscripciones {
+  repeated MensajeInscripcion inscripciones = 1;
+}

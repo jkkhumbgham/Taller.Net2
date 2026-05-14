@@ -1,90 +1,26 @@
 version: '3.8'
 
 services:
-  content_db:
-    image: postgres:16
-    container_name: content_db
-    environment:
-      POSTGRES_DB: content_db
-      POSTGRES_USER: content_user
-      POSTGRES_PASSWORD: content_pass
-    ports:
-      - "5432:5432"
-    volumes:
-      - ../db/content:/docker-entrypoint-initdb.d
-      - content_db_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U content_user -d content_db"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-
-  user_db:
-    image: postgres:16
-    container_name: user_db
-    environment:
-      POSTGRES_DB: user_db
-      POSTGRES_USER: user_user
-      POSTGRES_PASSWORD: user_pass
-    ports:
-      - "5433:5432"
-    volumes:
-      - ../db/user:/docker-entrypoint-initdb.d
-      - user_db_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user_user -d user_db"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-
-  cuestionarios:
-    build:
-      context: ./Cuestionarios
-      dockerfile: Dockerfile
-    container_name: svc-cuestionarios
-    ports:
-      - "5020:5020"
-    environment:
-      - ConnectionStrings__UserDb=Host=user_db;Port=5432;Database=user_db;Username=user_user;Password=user_pass
-      - ConnectionStrings__ContentDb=Host=content_db;Port=5432;Database=content_db;Username=content_user;Password=content_pass
-    depends_on:
-      content_db:
-        condition: service_healthy
-      user_db:
-        condition: service_healthy
-
   clases:
     build:
       context: ./Clases
       dockerfile: Dockerfile
     container_name: svc-clases
-    ports:
-      - "5021:5021"
+    network_mode: host
     environment:
-      - ConnectionStrings__UserDb=Host=user_db;Port=5432;Database=user_db;Username=user_user;Password=user_pass
-      - ConnectionStrings__ContentDb=Host=content_db;Port=5432;Database=content_db;Username=content_user;Password=content_pass
-    depends_on:
-      content_db:
-        condition: service_healthy
-      user_db:
-        condition: service_healthy
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5021
+      - ConnectionStrings__UserDb=Host=localhost;Port=5433;Database=user_db;Username=user_user;Password=user_pass
+      - ConnectionStrings__ContentDb=Host=localhost;Port=5432;Database=content_db;Username=content_user;Password=content_pass
 
   estadisticas:
     build:
       context: ./Estadisticas
       dockerfile: Dockerfile
     container_name: svc-estadisticas
-    ports:
-      - "5022:5022"
+    network_mode: host
     environment:
-      - ConnectionStrings__UserDb=Host=user_db;Port=5432;Database=user_db;Username=user_user;Password=user_pass
-      - ConnectionStrings__ContentDb=Host=content_db;Port=5432;Database=content_db;Username=content_user;Password=content_pass
-    depends_on:
-      content_db:
-        condition: service_healthy
-      user_db:
-        condition: service_healthy
-
-volumes:
-  content_db_data:
-  user_db_data:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5022
+      - ConnectionStrings__UserDb=Host=localhost;Port=5433;Database=user_db;Username=user_user;Password=user_pass
+      - ConnectionStrings__ContentDb=Host=localhost;Port=5432;Database=content_db;Username=content_user;Password=content_pass

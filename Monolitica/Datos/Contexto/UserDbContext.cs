@@ -23,6 +23,21 @@ public class UserDbContext : DbContext
         modelBuilder.Entity<IntentoCuestionario>().ToTable("quiz_attempts");
         modelBuilder.Entity<IntentoRespuesta>().ToTable("question_attempts");
 
+        modelBuilder.Entity<Inscripcion>()
+            .HasOne(i => i.Usuario)
+            .WithMany(u => u.Inscripciones)
+            .HasForeignKey(i => i.UserId);
+
+        modelBuilder.Entity<ProgresoLeccion>()
+            .HasOne(p => p.Usuario)
+            .WithMany(u => u.ProgresosLecciones)
+            .HasForeignKey(p => p.UserId);
+
+        modelBuilder.Entity<IntentoCuestionario>()
+            .HasOne(ic => ic.Usuario)
+            .WithMany(u => u.IntentosCuestionarios)
+            .HasForeignKey(ic => ic.UserId);
+
         modelBuilder.Entity<IntentoRespuesta>()
             .HasOne(ir => ir.IntentoCuestionario)
             .WithMany(ic => ic.IntentosRespuestas)

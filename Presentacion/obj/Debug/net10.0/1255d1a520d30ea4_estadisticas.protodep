@@ -1,0 +1,2 @@
+obj/Debug/net10.0/Protos/Estadisticas.cs \
+obj/Debug/net10.0/Protos/EstadisticasGrpc.cs: Protos/estadisticas.proto

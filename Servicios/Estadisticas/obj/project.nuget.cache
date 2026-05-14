@@ -1,0 +1,68 @@
+{
+  "version": 2,
+  "dgSpecHash": "33NOabUh1mE=",
+  "success": true,
+  "projectFilePath": "/home/jkkhumbgham/Documentos/Taller.Net2/Servicios/Estadisticas/Estadisticas.csproj",
+  "expectedPackageFiles": [
+    "/home/jkkhumbgham/.nuget/packages/efcore.namingconventions/9.0.0/efcore.namingconventions.9.0.0.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/microsoft.aspnetcore.http.abstractions/2.1.1/microsoft.aspnetcore.http.abstractions.2.1.1.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/microsoft.aspnetcore.http.features/2.1.1/microsoft.aspnetcore.http.features.2.1.1.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/microsoft.aspnetcore.mvc.abstractions/2.1.38/microsoft.aspnetcore.mvc.abstractions.2.1.38.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/microsoft.aspnetcore.routing.abstractions/2.1.1/microsoft.aspnetcore.routing.abstractions.2.1.1.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/microsoft.entityframeworkcore/9.0.1/microsoft.entityframeworkcore.9.0.1.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/microsoft.entityframeworkcore.abstractions/9.0.1/microsoft.entityframeworkcore.abstractions.9.0.1.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/microsoft.entityframeworkcore.analyzers/9.0.1/microsoft.entityframeworkcore.analyzers.9.0.1.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/microsoft.entityframeworkcore.relational/9.0.1/microsoft.entityframeworkcore.relational.9.0.1.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/microsoft.extensions.caching.abstractions/9.0.1/microsoft.extensions.caching.abstractions.9.0.1.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/microsoft.extensions.caching.memory/9.0.1/microsoft.extensions.caching.memory.9.0.1.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/microsoft.extensions.configuration.abstractions/9.0.1/microsoft.extensions.configuration.abstractions.9.0.1.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/microsoft.extensions.dependencyinjection/9.0.1/microsoft.extensions.dependencyinjection.9.0.1.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/9.0.1/microsoft.extensions.dependencyinjection.abstractions.9.0.1.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/microsoft.extensions.logging/9.0.1/microsoft.extensions.logging.9.0.1.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/microsoft.extensions.logging.abstractions/9.0.1/microsoft.extensions.logging.abstractions.9.0.1.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/microsoft.extensions.options/9.0.1/microsoft.extensions.options.9.0.1.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/microsoft.extensions.primitives/9.0.1/microsoft.extensions.primitives.9.0.1.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/microsoft.net.http.headers/2.1.1/microsoft.net.http.headers.2.1.1.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/microsoft.netcore.platforms/3.1.0/microsoft.netcore.platforms.3.1.0.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/microsoft.win32.systemevents/4.7.0/microsoft.win32.systemevents.4.7.0.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/npgsql/9.0.3/npgsql.9.0.3.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/npgsql.entityframeworkcore.postgresql/9.0.4/npgsql.entityframeworkcore.postgresql.9.0.4.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/soapcore/1.1.0.44/soapcore.1.1.0.44.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/system.codedom/6.0.0/system.codedom.6.0.0.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/system.drawing.common/4.7.0/system.drawing.common.4.7.0.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/system.private.servicemodel/4.8.1/system.private.servicemodel.4.8.1.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/system.security.cryptography.pkcs/4.7.0/system.security.cryptography.pkcs.4.7.0.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/system.security.cryptography.xml/4.7.0/system.security.cryptography.xml.4.7.0.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/system.security.permissions/4.7.0/system.security.permissions.4.7.0.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/system.servicemodel.http/4.8.1/system.servicemodel.http.4.8.1.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/system.servicemodel.primitives/4.8.1/system.servicemodel.primitives.4.8.1.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/system.windows.extensions/4.7.0/system.windows.extensions.4.7.0.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/microsoft.aspnetcore.app.ref/10.0.4/microsoft.aspnetcore.app.ref.10.0.4.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1904",
+      "level": "Warning",
+      "message": "El paquete \"System.Drawing.Common\" 4.7.0 tiene una vulnerabilidad de gravedad crítica conocida, https://github.com/advisories/GHSA-rxg9-xrhp-64gj",
+      "projectPath": "/home/jkkhumbgham/Documentos/Taller.Net2/Servicios/Estadisticas/Estadisticas.csproj",
+      "warningLevel": 1,
+      "filePath": "/home/jkkhumbgham/Documentos/Taller.Net2/Servicios/Estadisticas/Estadisticas.csproj",
+      "libraryId": "System.Drawing.Common",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    },
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "message": "El paquete \"System.Security.Cryptography.Xml\" 4.7.0 tiene una vulnerabilidad de gravedad moderada conocida, https://github.com/advisories/GHSA-vh55-786g-wjwj",
+      "projectPath": "/home/jkkhumbgham/Documentos/Taller.Net2/Servicios/Estadisticas/Estadisticas.csproj",
+      "warningLevel": 1,
+      "filePath": "/home/jkkhumbgham/Documentos/Taller.Net2/Servicios/Estadisticas/Estadisticas.csproj",
+      "libraryId": "System.Security.Cryptography.Xml",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    }
+  ]
+}

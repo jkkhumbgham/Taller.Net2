@@ -1,14 +1,19 @@
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Monolitica.Datos.Contexto;
 using Monolitica.Datos.Repositorios;
+using Monolitica.GrpcServicios;
 using Monolitica.Logica.Servicios;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
-builder.Services.AddOpenApi();
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(8080, o => o.Protocols = HttpProtocols.Http2);
+});
 
-// Register DbContexts
+builder.Services.AddGrpc();
+
 builder.Services.AddDbContext<UserDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("UserDb"))
            .UseSnakeCaseNamingConvention());
@@ -17,22 +22,14 @@ builder.Services.AddDbContext<ContentDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("ContentDb"))
            .UseSnakeCaseNamingConvention());
 
-// Register Repositories
 builder.Services.AddScoped<IRepositorioInscripciones, RepositorioInscripciones>();
 builder.Services.AddScoped<IRepositorioProgresoLecciones, RepositorioProgresoLecciones>();
 builder.Services.AddScoped<IRepositorioIntentosCuestionarios, RepositorioIntentosCuestionarios>();
-
-// Register Services
 builder.Services.AddScoped<IServicioEstadisticas, ServicioEstadisticas>();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
-
-app.UseHttpsRedirection();
-app.MapControllers();
+app.MapGrpcService<EstadisticasGrpcServicio>();
+app.MapGrpcService<CrudGrpcServicio>();
 
 app.Run();

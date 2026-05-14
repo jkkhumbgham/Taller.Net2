@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Components;
-using Presentacion.Datos.Repositorios.Interfaces;
 using Presentacion.Modelos.VistaModelos;
+using Presentacion.Servicios.Interfaces;
 
 namespace Presentacion.Components.Pages.Cursos;
 
 public partial class FormularioCurso : ComponentBase
 {
-    [Inject] protected IRepositorioCursos RepositorioCursos { get; set; } = default!;
+    [Inject] protected IServicioCrud ServicioCrud { get; set; } = default!;
     [Inject] protected NavigationManager NavigationManager { get; set; } = default!;
 
     [Parameter] public long? Id { get; set; }
@@ -24,7 +24,7 @@ public partial class FormularioCurso : ComponentBase
         {
             try
             {
-                CursoExistente = await RepositorioCursos.ObtenerPorIdAsync(Id.Value);
+                CursoExistente = await ServicioCrud.ObtenerCursoPorIdAsync(Id.Value);
                 if (CursoExistente != null)
                 {
                     Modelo = new CrearCursoModelo
@@ -64,7 +64,7 @@ public partial class FormularioCurso : ComponentBase
         {
             if (EsNuevo)
             {
-                await RepositorioCursos.CrearAsync(Modelo);
+                await ServicioCrud.CrearCursoAsync(Modelo);
             }
             else if (CursoExistente != null)
             {
@@ -79,7 +79,7 @@ public partial class FormularioCurso : ComponentBase
                     CreadoEn = CursoExistente.CreadoEn,
                     ActualizadoEn = DateTime.UtcNow
                 };
-                await RepositorioCursos.ActualizarAsync(actualizado);
+                await ServicioCrud.ActualizarCursoAsync(actualizado);
             }
             NavigationManager.NavigateTo("/cursos");
         }

@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Components;
-using Presentacion.Datos.Repositorios.Interfaces;
 using Presentacion.Modelos.VistaModelos;
+using Presentacion.Servicios.Interfaces;
 
 namespace Presentacion.Components.Pages.Usuarios;
 
 public partial class ListaUsuarios : ComponentBase
 {
-    [Inject] protected IRepositorioUsuarios RepositorioUsuarios { get; set; } = default!;
+    [Inject] protected IServicioCrud ServicioCrud { get; set; } = default!;
 
     protected IEnumerable<UsuarioVistaModelo> Usuarios { get; set; } = Enumerable.Empty<UsuarioVistaModelo>();
     protected bool Cargando { get; set; } = true;
@@ -25,7 +25,7 @@ public partial class ListaUsuarios : ComponentBase
         try
         {
             Cargando = true;
-            Usuarios = await RepositorioUsuarios.ObtenerTodosAsync();
+            Usuarios = await ServicioCrud.ObtenerTodosUsuariosAsync();
         }
         catch
         {
@@ -55,7 +55,7 @@ public partial class ListaUsuarios : ComponentBase
         MostrarConfirmacion = false;
         try
         {
-            var resultado = await RepositorioUsuarios.EliminarAsync(UsuarioAEliminar.Id);
+            var resultado = await ServicioCrud.EliminarUsuarioAsync(UsuarioAEliminar.Id);
             if (resultado)
             {
                 MensajeExito = $"Usuario '{UsuarioAEliminar.Nombre}' eliminado correctamente.";
