@@ -62,4 +62,31 @@ public class ServicioNotas : IServicioNotas
             TotalIntentos = intentosList.Count
         };
     }
+
+    public async Task<ResumenEstudianteDto?> ObtenerResumenEstudianteAsync(int userId)
+    {
+        var usuario = await _repo.ObtenerUsuarioPorIdAsync(userId);
+        if (usuario == null) return null;
+
+        var enrollments = (await _repo.ObtenerEnrollmentsPorUsuarioAsync(userId)).ToList();
+        var intentos = (await _repo.ObtenerIntentosPorUsuarioAsync(userId)).ToList();
+
+        var promedio = intentos.Where(i => i.MaxScore > 0)
+            .Select(i => (i.Score / i.MaxScore) * 100)
+            .DefaultIfEmpty(0)
+            .Average();
+
+        return new ResumenEstudianteDto
+        {
+            IdEstudiante = usuario.Id,
+            NombreEstudiante = usuario.Name,
+            EmailEstudiante = usuario.Email,
+            TotalCursosInscritos = enrollments.Count,
+            CursosActivos = enrollments.Count(e => e.Progress < 1.0),
+            CursosCompletados = enrollments.Count(e => e.Progress >= 1.0),
+            TotalTiempoInvertido = 0,
+            TotalLeccionesCompletadas = 0,
+            PromedioCalificacionCuestionarios = Math.Round(promedio, 2)
+        };
+    }
 }

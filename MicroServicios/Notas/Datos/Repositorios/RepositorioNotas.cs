@@ -33,4 +33,11 @@ public class RepositorioNotas : IRepositorioNotas
             .Where(q => quizIds.Contains(q.Id))
             .ToListAsync();
     }
+
+    public async Task<IEnumerable<Inscripcion>> ObtenerEnrollmentsPorUsuarioAsync(int userId)
+    {
+        return await _userContext.Enrollments
+            .Where(e => e.UserId == userId)
+            .ToListAsync();
+    }
 }

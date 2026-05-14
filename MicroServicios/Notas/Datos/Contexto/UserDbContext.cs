@@ -9,6 +9,7 @@ public class UserDbContext : DbContext
 
     public DbSet<Usuario> Users { get; set; }
     public DbSet<IntentoCuestionario> QuizAttempts { get; set; }
+    public DbSet<Inscripcion> Enrollments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -16,6 +17,7 @@ public class UserDbContext : DbContext
 
         modelBuilder.Entity<Usuario>().ToTable("users");
         modelBuilder.Entity<IntentoCuestionario>().ToTable("quiz_attempts");
+        modelBuilder.Entity<Inscripcion>().ToTable("enrollments");
 
         modelBuilder.Entity<IntentoCuestionario>()
             .HasOne(i => i.Usuario)

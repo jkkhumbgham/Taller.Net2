@@ -29,4 +29,12 @@ public class NotasController : ControllerBase
         if (resultado == null) return NotFound(new { mensaje = $"Estudiante con id {userId} no encontrado." });
         return Ok(resultado);
     }
+
+    [HttpGet("estudiante/{userId}/resumen")]
+    public async Task<IActionResult> ObtenerResumenEstudiante(int userId)
+    {
+        var resultado = await _servicio.ObtenerResumenEstudianteAsync(userId);
+        if (resultado == null) return NotFound(new { mensaje = $"Estudiante con id {userId} no encontrado." });
+        return Ok(resultado);
+    }
 }

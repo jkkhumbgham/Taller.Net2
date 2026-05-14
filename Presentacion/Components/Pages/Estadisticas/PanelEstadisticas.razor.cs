@@ -61,8 +61,10 @@ public partial class PanelEstadisticas : ComponentBase, IDisposable
                     break;
                 case TipoArquitectura.Servicios:
                     Resumen = await ServicioServicios.ObtenerResumenEstudianteAsync(EstudianteId);
+                    Notas = await ServicioServicios.ObtenerNotasEstudianteAsync(EstudianteId);
                     break;
                 case TipoArquitectura.MicroServicios:
+                    Resumen = await ServicioMicroServicios.ObtenerResumenEstudianteAsync(EstudianteId);
                     Notas = await ServicioMicroServicios.ObtenerNotasEstudianteAsync(EstudianteId);
                     break;
             }
@@ -99,6 +101,7 @@ public partial class PanelEstadisticas : ComponentBase, IDisposable
                     break;
                 case TipoArquitectura.Servicios:
                     ClasesMasTomadas = await ServicioServicios.ObtenerClasesMasTomadosAsync();
+                    MejoresEstudiantes = await ServicioServicios.ObtenerMejoresEstudiantesAsync();
                     break;
                 case TipoArquitectura.MicroServicios:
                     ClasesMasTomadas = await ServicioMicroServicios.ObtenerClasesMasTomadosAsync();

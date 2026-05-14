@@ -13,6 +13,7 @@ services:
       - Arquitecturas__Monolitico__GrpcUrl=http://localhost:5001
       - Arquitecturas__Servicios__ClasesUrl=http://localhost:5021
       - Arquitecturas__Servicios__EstadisticasUrl=http://localhost:5022
+      - Arquitecturas__Servicios__CuestionariosUrl=http://localhost:5023
       - Arquitecturas__MicroServicios__NotasUrl=http://localhost:5010
       - Arquitecturas__MicroServicios__CursosAcabadosUrl=http://localhost:5011
       - Arquitecturas__MicroServicios__ClasesMasTomadosUrl=http://localhost:5012
