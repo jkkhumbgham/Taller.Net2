@@ -1,0 +1,53 @@
+@page "/usuarios/nuevo"
+@page "/usuarios/editar/{Id:long}"
+@rendermode InteractiveServer
+
+<PageTitle>@(EsNuevo ? "Nuevo usuario" : "Editar usuario") - E-Learning Admin</PageTitle>
+
+<div class="d-flex align-items-center mb-4 gap-3">
+    <a href="/usuarios" class="btn btn-outline-secondary btn-sm">&larr; Volver</a>
+    <h1 class="h3 mb-0">@(EsNuevo ? "Nuevo usuario" : "Editar usuario")</h1>
+</div>
+
+<MensajeAlerta Type="danger" Mensaje="@MensajeError" Visible="@(!string.IsNullOrEmpty(MensajeError))" VisibleChanged="@(_ => MensajeError = string.Empty)" />
+
+@if (Cargando)
+{
+    <CargandoIndicador Mensaje="Cargando..." />
+}
+else
+{
+    <div class="row">
+        <div class="col-12 col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <EditForm Model="@Modelo" OnValidSubmit="Guardar">
+                        <DataAnnotationsValidator />
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Nombre <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" @bind="Modelo.Nombre" placeholder="Nombre completo" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Email <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control" @bind="Modelo.Email" placeholder="correo@ejemplo.com" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Contraseña @(EsNuevo ? "" : "(dejar en blanco para no cambiar)")</label>
+                            <input type="password" class="form-control" @bind="Modelo.Password" placeholder="@(EsNuevo ? "Contraseña" : "Nueva contraseña (opcional)")" />
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary" disabled="@Guardando">
+                                @if (Guardando)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-1"></span>
+                                }
+                                Guardar
+                            </button>
+                            <a href="/usuarios" class="btn btn-outline-secondary">Cancelar</a>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+}

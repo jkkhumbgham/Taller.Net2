@@ -1,0 +1,72 @@
+@page "/cursos/nuevo"
+@page "/cursos/editar/{Id:long}"
+@rendermode InteractiveServer
+
+<PageTitle>@(EsNuevo ? "Nuevo curso" : "Editar curso") - E-Learning Admin</PageTitle>
+
+<div class="d-flex align-items-center mb-4 gap-3">
+    <a href="/cursos" class="btn btn-outline-secondary btn-sm">&larr; Volver</a>
+    <h1 class="h3 mb-0">@(EsNuevo ? "Nuevo curso" : "Editar curso")</h1>
+</div>
+
+<MensajeAlerta Type="danger" Mensaje="@MensajeError" Visible="@(!string.IsNullOrEmpty(MensajeError))" VisibleChanged="@(_ => MensajeError = string.Empty)" />
+
+@if (Cargando)
+{
+    <CargandoIndicador Mensaje="Cargando..." />
+}
+else
+{
+    <div class="row">
+        <div class="col-12 col-md-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <EditForm Model="@Modelo" OnValidSubmit="Guardar">
+                        <DataAnnotationsValidator />
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Título <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" @bind="Modelo.Titulo" placeholder="Título del curso" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Descripción</label>
+                            <textarea class="form-control" @bind="Modelo.Descripcion" rows="4" placeholder="Descripción del curso"></textarea>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-12 col-sm-6">
+                                <label class="form-label fw-semibold">Nivel</label>
+                                <select class="form-select" @bind="Modelo.Nivel">
+                                    <option value="Principiante">Principiante</option>
+                                    <option value="Intermedio">Intermedio</option>
+                                    <option value="Avanzado">Avanzado</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <label class="form-label fw-semibold">Idioma</label>
+                                <select class="form-select" @bind="Modelo.Idioma">
+                                    <option value="Español">Español</option>
+                                    <option value="English">English</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="esPublicado" @bind="Modelo.EsPublicado" />
+                                <label class="form-check-label fw-semibold" for="esPublicado">Publicado</label>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary" disabled="@Guardando">
+                                @if (Guardando)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-1"></span>
+                                }
+                                Guardar
+                            </button>
+                            <a href="/cursos" class="btn btn-outline-secondary">Cancelar</a>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+}

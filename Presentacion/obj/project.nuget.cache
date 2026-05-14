@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "HHNhjyAvTas=",
+  "success": true,
+  "projectFilePath": "/home/jkkhumbgham/Documentos/Taller.Net2/Presentacion/Presentacion.csproj",
+  "expectedPackageFiles": [
+    "/home/jkkhumbgham/.nuget/packages/microsoft.aspnetcore.app.internal.assets/10.0.4/microsoft.aspnetcore.app.internal.assets.10.0.4.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/8.0.2/microsoft.extensions.dependencyinjection.abstractions.8.0.2.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/microsoft.extensions.logging.abstractions/8.0.2/microsoft.extensions.logging.abstractions.8.0.2.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/npgsql/9.0.3/npgsql.9.0.3.nupkg.sha512",
+    "/home/jkkhumbgham/.nuget/packages/microsoft.aspnetcore.app.ref/10.0.4/microsoft.aspnetcore.app.ref.10.0.4.nupkg.sha512"
+  ],
+  "logs": []
+}

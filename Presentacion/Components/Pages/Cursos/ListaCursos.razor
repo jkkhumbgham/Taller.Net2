@@ -1,0 +1,74 @@
+@page "/cursos"
+@rendermode InteractiveServer
+
+<PageTitle>Cursos - E-Learning Admin</PageTitle>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">Cursos</h1>
+    <a href="/cursos/nuevo" class="btn btn-primary">+ Nuevo curso</a>
+</div>
+
+<MensajeAlerta Type="success" Mensaje="@MensajeExito" Visible="@(!string.IsNullOrEmpty(MensajeExito))" VisibleChanged="@(_ => MensajeExito = string.Empty)" />
+<MensajeAlerta Type="danger" Mensaje="@MensajeError" Visible="@(!string.IsNullOrEmpty(MensajeError))" VisibleChanged="@(_ => MensajeError = string.Empty)" />
+
+@if (Cargando)
+{
+    <CargandoIndicador Mensaje="Cargando cursos..." />
+}
+else if (!Cursos.Any())
+{
+    <div class="alert alert-info">No hay cursos registrados.</div>
+}
+else
+{
+    <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Título</th>
+                        <th class="d-none d-md-table-cell">Nivel</th>
+                        <th class="d-none d-md-table-cell">Idioma</th>
+                        <th>Estado</th>
+                        <th class="d-none d-md-table-cell">Creado</th>
+                        <th class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var curso in Cursos)
+                    {
+                        <tr>
+                            <td class="align-middle text-muted small">@curso.Id</td>
+                            <td class="align-middle fw-semibold">@curso.Titulo</td>
+                            <td class="align-middle d-none d-md-table-cell">@curso.Nivel</td>
+                            <td class="align-middle d-none d-md-table-cell">@curso.Idioma</td>
+                            <td class="align-middle">
+                                @if (curso.EsPublicado)
+                                {
+                                    <span class="badge bg-success">Publicado</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Borrador</span>
+                                }
+                            </td>
+                            <td class="align-middle d-none d-md-table-cell small text-muted">@curso.CreadoEn.ToString("dd/MM/yyyy")</td>
+                            <td class="align-middle text-end">
+                                <a href="/cursos/editar/@curso.Id" class="btn btn-sm btn-outline-primary me-1">Editar</a>
+                                <button class="btn btn-sm btn-outline-danger" @onclick="() => ConfirmarEliminar(curso)">Eliminar</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+<ConfirmacionDialog
+    Visible="@MostrarConfirmacion"
+    Titulo="Eliminar curso"
+    Mensaje="@($"¿Está seguro de que desea eliminar el curso '{CursoAEliminar?.Titulo}'? Esta acción no se puede deshacer.")"
+    OnConfirmar="EliminarCurso"
+    OnCancelar="CancelarEliminar" />

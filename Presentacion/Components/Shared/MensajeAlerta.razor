@@ -1,0 +1,20 @@
+@if (Visible)
+{
+    <div class="alert alert-@Type alert-dismissible fade show" role="alert">
+        @Mensaje
+        <button type="button" class="btn-close" @onclick="Cerrar"></button>
+    </div>
+}
+
+@code {
+    [Parameter] public string Type { get; set; } = "info";
+    [Parameter] public string Mensaje { get; set; } = string.Empty;
+    [Parameter] public bool Visible { get; set; }
+    [Parameter] public EventCallback<bool> VisibleChanged { get; set; }
+
+    private async Task Cerrar()
+    {
+        Visible = false;
+        await VisibleChanged.InvokeAsync(false);
+    }
+}

@@ -1,0 +1,61 @@
+@page "/usuarios"
+@rendermode InteractiveServer
+
+<PageTitle>Usuarios - E-Learning Admin</PageTitle>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">Usuarios</h1>
+    <a href="/usuarios/nuevo" class="btn btn-primary">+ Nuevo usuario</a>
+</div>
+
+<MensajeAlerta Type="success" Mensaje="@MensajeExito" Visible="@(!string.IsNullOrEmpty(MensajeExito))" VisibleChanged="@(_ => MensajeExito = string.Empty)" />
+<MensajeAlerta Type="danger" Mensaje="@MensajeError" Visible="@(!string.IsNullOrEmpty(MensajeError))" VisibleChanged="@(_ => MensajeError = string.Empty)" />
+
+@if (Cargando)
+{
+    <CargandoIndicador Mensaje="Cargando usuarios..." />
+}
+else if (!Usuarios.Any())
+{
+    <div class="alert alert-info">No hay usuarios registrados.</div>
+}
+else
+{
+    <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Creado</th>
+                        <th class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var usuario in Usuarios)
+                    {
+                        <tr>
+                            <td class="align-middle text-muted small">@usuario.Id</td>
+                            <td class="align-middle fw-semibold">@usuario.Nombre</td>
+                            <td class="align-middle">@usuario.Email</td>
+                            <td class="align-middle small text-muted">@usuario.CreadoEn.ToString("dd/MM/yyyy")</td>
+                            <td class="align-middle text-end">
+                                <a href="/usuarios/editar/@usuario.Id" class="btn btn-sm btn-outline-primary me-1">Editar</a>
+                                <button class="btn btn-sm btn-outline-danger" @onclick="() => ConfirmarEliminar(usuario)">Eliminar</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+<ConfirmacionDialog
+    Visible="@MostrarConfirmacion"
+    Titulo="Eliminar usuario"
+    Mensaje="@($"¿Está seguro de que desea eliminar al usuario '{UsuarioAEliminar?.Nombre}'? Esta acción no se puede deshacer.")"
+    OnConfirmar="EliminarUsuario"
+    OnCancelar="CancelarEliminar" />
