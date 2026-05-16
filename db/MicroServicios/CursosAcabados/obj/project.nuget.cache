@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "mbq2aqUDibA=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\jlaur\\Downloads\\Taller.Net2\\db\\MicroServicios\\CursosAcabados\\CursosAcabados.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\jlaur\\.nuget\\packages\\npgsql\\9.0.3\\npgsql.9.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

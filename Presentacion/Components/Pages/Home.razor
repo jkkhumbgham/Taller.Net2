@@ -3,12 +3,7 @@
 
 <PageTitle>Dashboard - E-Learning Admin</PageTitle>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h3 mb-0">Dashboard</h1>
-    <span class="badge bg-primary fs-6">
-        Arquitectura: @NombreArquitectura
-    </span>
-</div>
+
 
 @if (Cargando)
 {
@@ -91,18 +86,6 @@ else
                 </div>
             </div>
         </div>
-        <div class="col-12 col-md-6">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-transparent fw-semibold">Arquitectura actual</div>
-                <div class="card-body">
-                    <p class="mb-2">Selecciona la arquitectura de backend desde el menú lateral.</p>
-                    <div class="d-flex gap-2 flex-wrap">
-                        <span class="badge @(SelectorArquitectura.ArquitecturaSeleccionada == TipoArquitectura.Monolitico ? "bg-primary" : "bg-secondary")">Monolítico</span>
-                        <span class="badge @(SelectorArquitectura.ArquitecturaSeleccionada == TipoArquitectura.Servicios ? "bg-primary" : "bg-secondary")">Servicios</span>
-                        <span class="badge @(SelectorArquitectura.ArquitecturaSeleccionada == TipoArquitectura.MicroServicios ? "bg-primary" : "bg-secondary")">Microservicios</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+
     </div>
 }

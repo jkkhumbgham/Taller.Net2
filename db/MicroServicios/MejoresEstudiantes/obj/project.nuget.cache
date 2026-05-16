@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "LbQP6Jjji0g=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\jlaur\\Downloads\\Taller.Net2\\db\\MicroServicios\\MejoresEstudiantes\\MejoresEstudiantes.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\jlaur\\.nuget\\packages\\npgsql\\9.0.3\\npgsql.9.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

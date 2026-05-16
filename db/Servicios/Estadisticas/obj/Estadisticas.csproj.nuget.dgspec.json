@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\jlaur\\Downloads\\Taller.Net2\\db\\Servicios\\Estadisticas\\Estadisticas.csproj": {}
+    "C:\\Users\\jlaur\\Downloads\\Taller.Net2\\db\\Servicios\\Estadisticas\\Estadisticas.csproj": {}
   },
   "projects": {
-    "c:\\Users\\jlaur\\Downloads\\Taller.Net2\\db\\Servicios\\Estadisticas\\Estadisticas.csproj": {
+    "C:\\Users\\jlaur\\Downloads\\Taller.Net2\\db\\Servicios\\Estadisticas\\Estadisticas.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\jlaur\\Downloads\\Taller.Net2\\db\\Servicios\\Estadisticas\\Estadisticas.csproj",
+        "projectUniqueName": "C:\\Users\\jlaur\\Downloads\\Taller.Net2\\db\\Servicios\\Estadisticas\\Estadisticas.csproj",
         "projectName": "Estadisticas",
-        "projectPath": "c:\\Users\\jlaur\\Downloads\\Taller.Net2\\db\\Servicios\\Estadisticas\\Estadisticas.csproj",
+        "projectPath": "C:\\Users\\jlaur\\Downloads\\Taller.Net2\\db\\Servicios\\Estadisticas\\Estadisticas.csproj",
         "packagesPath": "C:\\Users\\jlaur\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\jlaur\\Downloads\\Taller.Net2\\db\\Servicios\\Estadisticas\\obj\\",
+        "outputPath": "C:\\Users\\jlaur\\Downloads\\Taller.Net2\\db\\Servicios\\Estadisticas\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\jlaur\\AppData\\Roaming\\NuGet\\NuGet.Config"

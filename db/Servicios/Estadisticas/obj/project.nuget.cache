@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "VXwL3UJEOOs=",
+  "dgSpecHash": "dVgDw9j/08U=",
   "success": true,
-  "projectFilePath": "c:\\Users\\jlaur\\Downloads\\Taller.Net2\\db\\Servicios\\Estadisticas\\Estadisticas.csproj",
+  "projectFilePath": "C:\\Users\\jlaur\\Downloads\\Taller.Net2\\db\\Servicios\\Estadisticas\\Estadisticas.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\jlaur\\.nuget\\packages\\efcore.namingconventions\\9.0.0\\efcore.namingconventions.9.0.0.nupkg.sha512",
     "C:\\Users\\jlaur\\.nuget\\packages\\microsoft.entityframeworkcore\\9.0.1\\microsoft.entityframeworkcore.9.0.1.nupkg.sha512",
