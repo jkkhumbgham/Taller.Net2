@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+option csharp_namespace = "Monolitica.Grpc";
+
+package estadisticas;
+
+service EstadisticasGrpc {
+  rpc ObtenerResumenEstudiante(SolicitudUsuario) returns (RespuestaResumen);
+  rpc ObtenerNotasEstudiante(SolicitudUsuario) returns (RespuestaNotas);
+  rpc ObtenerCursosAcabados(SolicitudUsuario) returns (RespuestaCursosAcabados);
+  rpc ObtenerClasesMasTomadas(SolicitudVacia) returns (RespuestaClasesMasTomadas);
+  rpc ObtenerMejoresEstudiantes(SolicitudVacia) returns (RespuestaMejoresEstudiantes);
+}
+
+message SolicitudUsuario {
+  int32 user_id = 1;
+}
+
+message SolicitudVacia {}
+
+message MensajeResumenEstudiante {
+  int64 id_estudiante = 1;
+  string nombre_estudiante = 2;
+  string email_estudiante = 3;
+  int32 total_cursos_inscritos = 4;
+  int32 cursos_activos = 5;
+  int32 cursos_completados = 6;
+  double total_tiempo_invertido = 7;
+  int32 total_lecciones_completadas = 8;
+  double promedio_calificacion_cuestionarios = 9;
+}
+
+message RespuestaResumen {
+  bool encontrado = 1;
+  MensajeResumenEstudiante resumen = 2;
+}
+
+message MensajNota {
+  int64 id_intento = 1;
+  int64 id_cuestionario = 2;
+  string titulo_cuestionario = 3;
+  double calificacion = 4;
+  double calificacion_maxima = 5;
+  double porcentaje_calificacion = 6;
+  int32 numero_intento = 7;
+  string fecha_intento = 8;
+}
+
+message RespuestaNotas {
+  repeated MensajNota notas = 1;
+}
+
+message MensajeCursoAcabado {
+  int64 id_curso = 1;
+  string titulo_curso = 2;
+  string fecha_inscripcion = 3;
+  string fecha_completado = 4;
+  bool tiene_fecha_completado = 5;
+  int32 total_lecciones = 6;
+  double duracion_total_segundos = 7;
+}
+
+message RespuestaCursosAcabados {
+  repeated MensajeCursoAcabado cursos = 1;
+}
+
+message MensajeClaseMasTomada {
+  int64 id_curso = 1;
+  string titulo_curso = 2;
+  int32 total_inscritos = 3;
+  double porcentaje_completados = 4;
+}
+
+message RespuestaClasesMasTomadas {
+  repeated MensajeClaseMasTomada clases = 1;
+}
+
+message MensajeMejorEstudiante {
+  int64 id_estudiante = 1;
+  string nombre_estudiante = 2;
+  double promedio_calificacion = 3;
+  int32 total_intentos = 4;
+  int32 cursos_completados = 5;
+  int32 posicion = 6;
+}
+
+message RespuestaMejoresEstudiantes {
+  repeated MensajeMejorEstudiante estudiantes = 1;
+}

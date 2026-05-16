@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "dgSpecHash": "qqC/x6mR9kA=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\jlaur\\Downloads\\Taller.Net2\\MicroServicios\\MejoresEstudiantes\\MejoresEstudiantes.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\jlaur\\.nuget\\packages\\efcore.namingconventions\\9.0.0\\efcore.namingconventions.9.0.0.nupkg.sha512",
+    "C:\\Users\\jlaur\\.nuget\\packages\\microsoft.entityframeworkcore\\9.0.1\\microsoft.entityframeworkcore.9.0.1.nupkg.sha512",
+    "C:\\Users\\jlaur\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\9.0.1\\microsoft.entityframeworkcore.abstractions.9.0.1.nupkg.sha512",
+    "C:\\Users\\jlaur\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\9.0.1\\microsoft.entityframeworkcore.analyzers.9.0.1.nupkg.sha512",
+    "C:\\Users\\jlaur\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\9.0.1\\microsoft.entityframeworkcore.relational.9.0.1.nupkg.sha512",
+    "C:\\Users\\jlaur\\.nuget\\packages\\npgsql\\9.0.3\\npgsql.9.0.3.nupkg.sha512",
+    "C:\\Users\\jlaur\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\9.0.4\\npgsql.entityframeworkcore.postgresql.9.0.4.nupkg.sha512"
+  ],
+  "logs": []
+}

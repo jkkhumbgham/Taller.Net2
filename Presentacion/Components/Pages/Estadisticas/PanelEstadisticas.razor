@@ -1,56 +1,82 @@
 @page "/estadisticas"
 @rendermode InteractiveServer
 
-<PageTitle>Estadísticas - E-Learning Admin</PageTitle>
+<PageTitle>📊 Dashboard de Estadísticas - E-Learning Admin</PageTitle>
 
-<h1 class="h3 mb-4">Estadísticas</h1>
+<div class="container-fluid px-4 py-3">
+    <div class="row mb-4 align-items-center">
+        <div class="col">
+            <h1 class="h3 mb-0">
+                <span class="badge bg-primary me-2">📊</span>
+                Dashboard de Estadísticas
+            </h1>
+            <small class="text-muted">Visualización completa de métricas educativas</small>
+        </div>
+    </div>
+    </div>
 
 <div class="mb-4">
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs nav-fill border-bottom">
         <li class="nav-item">
             <button class="nav-link @(ArquitecturaActual == TipoArquitectura.Monolitico ? "active" : "")"
                     @onclick="() => CambiarArquitectura(TipoArquitectura.Monolitico)">
-                Monolítico
+                <span class="badge bg-success me-1">🏢</span>Monolítico
             </button>
         </li>
         <li class="nav-item">
             <button class="nav-link @(ArquitecturaActual == TipoArquitectura.Servicios ? "active" : "")"
                     @onclick="() => CambiarArquitectura(TipoArquitectura.Servicios)">
-                Servicios
+                <span class="badge bg-info me-1">⚙️</span>Servicios
             </button>
         </li>
         <li class="nav-item">
             <button class="nav-link @(ArquitecturaActual == TipoArquitectura.MicroServicios ? "active" : "")"
                     @onclick="() => CambiarArquitectura(TipoArquitectura.MicroServicios)">
-                Microservicios
+                <span class="badge bg-warning me-1">🔧</span>Microservicios
             </button>
         </li>
     </ul>
 </div>
 
-<div class="card border-0 shadow-sm mb-4">
-    <div class="card-body">
-        <div class="row g-3 align-items-end">
-            <div class="col-12 col-sm-6 col-md-4">
-                <label class="form-label fw-semibold">ID del estudiante</label>
-                <input type="number" class="form-control" @bind="EstudianteId" min="1" placeholder="Ingrese el ID" />
+<div class="row mb-4 g-3">
+    <div class="col-12 col-md-6 col-lg-4">
+        <div class="card border-0 shadow-sm bg-gradient">
+            <div class="card-body">
+                <label class="form-label fw-semibold text-muted">🔍 Búsqueda por Estudiante</label>
+                <div class="input-group">
+                    <input type="number" class="form-control" @bind="EstudianteId" min="1" 
+                           placeholder="ID del estudiante" />
+                    <button class="btn btn-primary" @onclick="BuscarEstadisticas" disabled="@Cargando">
+                        @if (Cargando)
+                        {
+                            <span class="spinner-border spinner-border-sm me-1"></span>
+                        }
+                        else
+                        {
+                            <span>🔎</span>
+                        }
+                        <span class="d-none d-sm-inline">Buscar</span>
+                    </button>
+                </div>
             </div>
-            <div class="col-auto">
-                <button class="btn btn-primary" @onclick="BuscarEstadisticas" disabled="@Cargando">
-                    @if (Cargando)
-                    {
-                        <span class="spinner-border spinner-border-sm me-1"></span>
-                    }
-                    Buscar
-                </button>
-            </div>
-            <div class="col-auto">
-                <button class="btn btn-outline-secondary" @onclick="CargarDatosGlobales" disabled="@CargandoGlobal">
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body d-flex align-items-end justify-content-between">
+                <div>
+                    <label class="form-label fw-semibold text-muted mb-0">📈 Datos Globales</label>
+                    <small class="text-muted">Resumen general del sistema</small>
+                </div>
+                <button class="btn btn-outline-primary btn-sm" @onclick="CargarDatosGlobales" disabled="@CargandoGlobal">
                     @if (CargandoGlobal)
                     {
-                        <span class="spinner-border spinner-border-sm me-1"></span>
+                        <span class="spinner-border spinner-border-sm"></span>
                     }
-                    Cargar datos globales
+                    else
+                    {
+                        <span>⟳</span>
+                    }
                 </button>
             </div>
         </div>
@@ -63,37 +89,71 @@
 @if (Resumen != null)
 {
     <div class="mb-4">
-        <h5 class="fw-semibold mb-3">Resumen del estudiante: @Resumen.NombreEstudiante</h5>
-        <div class="row g-3">
-            <div class="col-6 col-md-3">
-                <div class="card border-0 bg-light">
-                    <div class="card-body text-center py-3">
-                        <div class="h4 mb-0 fw-bold text-primary">@Resumen.TotalCursosInscritos</div>
-                        <small class="text-muted">Cursos inscritos</small>
+        <div class="alert alert-primary border-0" role="alert">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h5 class="alert-heading mb-1">👤 @Resumen.NombreEstudiante</h5>
+                    <small class="text-muted">@Resumen.EmailEstudiante</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="card border-0 shadow-sm bg-gradient-primary">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <small class="text-muted fw-semibold">Cursos Inscritos</small>
+                                <div class="h3 mb-0 fw-bold">@Resumen.TotalCursosInscritos</div>
+                            </div>
+                            <span style="font-size: 2rem;">📚</span>
+                        </div>
+                        <div class="small text-muted mt-2">
+                            @Resumen.CursosActivos activos • @Resumen.CursosCompletados completados
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-6 col-md-3">
-                <div class="card border-0 bg-light">
-                    <div class="card-body text-center py-3">
-                        <div class="h4 mb-0 fw-bold text-success">@Resumen.CursosCompletados</div>
-                        <small class="text-muted">Completados</small>
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="card border-0 shadow-sm" style="background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <small class="text-muted fw-semibold">Lecciones</small>
+                                <div class="h3 mb-0 fw-bold">@Resumen.TotalLeccionesCompletadas</div>
+                            </div>
+                            <span style="font-size: 2rem;">✅</span>
+                        </div>
+                        <small class="text-muted">Completadas</small>
                     </div>
                 </div>
             </div>
-            <div class="col-6 col-md-3">
-                <div class="card border-0 bg-light">
-                    <div class="card-body text-center py-3">
-                        <div class="h4 mb-0 fw-bold text-info">@Resumen.TotalLeccionesCompletadas</div>
-                        <small class="text-muted">Lecciones completadas</small>
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="card border-0 shadow-sm" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <small class="text-muted fw-semibold">Promedio Quiz</small>
+                                <div class="h3 mb-0 fw-bold">@Resumen.PromedioCalificacionCuestionarios.ToString("F1")</div>
+                            </div>
+                            <span style="font-size: 2rem;">🎯</span>
+                        </div>
+                        <small class="text-muted">Sobre 100</small>
                     </div>
                 </div>
             </div>
-            <div class="col-6 col-md-3">
-                <div class="card border-0 bg-light">
-                    <div class="card-body text-center py-3">
-                        <div class="h4 mb-0 fw-bold text-warning">@Resumen.PromedioCalificacionCuestionarios.ToString("F1")</div>
-                        <small class="text-muted">Promedio quizzes</small>
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="card border-0 shadow-sm" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <small class="text-muted fw-semibold">Tiempo Invertido</small>
+                                <div class="h5 mb-0 fw-bold">@(Resumen.TotalTiempoInvertido / 3600)h</div>
+                            </div>
+                            <span style="font-size: 2rem;">⏱️</span>
+                        </div>
+                        <small class="text-muted">@(Resumen.TotalTiempoInvertido % 3600 / 60)m aprox</small>
                     </div>
                 </div>
             </div>
@@ -104,34 +164,45 @@
 @if (Notas.Any())
 {
     <div class="mb-4">
-        <h5 class="fw-semibold mb-3">Notas del estudiante</h5>
+        <div class="d-flex align-items-center mb-3">
+            <h5 class="fw-semibold mb-0">📝 Desempeño en Quizzes</h5>
+            <span class="badge bg-secondary ms-2">@Notas.Count() intentos</span>
+        </div>
         <div class="card border-0 shadow-sm">
             <div class="table-responsive">
                 <table class="table table-hover mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th>Cuestionario</th>
-                            <th>Calificación</th>
-                            <th>Máxima</th>
-                            <th>Porcentaje</th>
-                            <th>Intento</th>
-                            <th class="d-none d-md-table-cell">Fecha</th>
+                            <th class="col-5">Cuestionario</th>
+                            <th class="col-2">Calificación</th>
+                            <th class="col-2">Desempeño</th>
+                            <th class="col-1 d-none d-md-table-cell">Intento</th>
+                            <th class="col-2 d-none d-md-table-cell">Fecha</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var nota in Notas)
+                        @foreach (var nota in Notas.OrderByDescending(n => n.FechaIntento))
                         {
-                            <tr>
-                                <td class="align-middle">@(string.IsNullOrEmpty(nota.TituloCuestionario) ? nota.NombreCuestionario : nota.TituloCuestionario)</td>
-                                <td class="align-middle">@nota.Calificacion</td>
-                                <td class="align-middle">@nota.CalificacionMaxima</td>
-                                <td class="align-middle">
-                                    <span class="badge @(nota.PorcentajeCalificacion >= 60 ? "bg-success" : "bg-danger")">
-                                        @nota.PorcentajeCalificacion.ToString("F1")%
+                            <tr class="@(nota.PorcentajeCalificacion >= 80 ? "table-success-light" : nota.PorcentajeCalificacion >= 60 ? "table-warning-light" : "table-danger-light")">
+                                <td class="align-middle fw-semibold">
+                                    <span class="text-truncate d-inline-block" style="max-width: 100%;">
+                                        @(string.IsNullOrEmpty(nota.TituloCuestionario) ? nota.NombreCuestionario : nota.TituloCuestionario)
                                     </span>
                                 </td>
-                                <td class="align-middle">#@nota.NumeroIntento</td>
-                                <td class="align-middle d-none d-md-table-cell small text-muted">@nota.FechaIntento.ToString("dd/MM/yyyy")</td>
+                                <td class="align-middle">@nota.Calificacion/@nota.CalificacionMaxima</td>
+                                <td class="align-middle">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="progress flex-grow-1" style="height: 8px;">
+                                            <div class="progress-bar @(nota.PorcentajeCalificacion >= 80 ? "bg-success" : nota.PorcentajeCalificacion >= 60 ? "bg-warning" : "bg-danger")" 
+                                                 style="width: @(nota.PorcentajeCalificacion)%;"></div>
+                                        </div>
+                                        <span class="badge @(nota.PorcentajeCalificacion >= 80 ? "bg-success" : nota.PorcentajeCalificacion >= 60 ? "bg-warning" : "bg-danger") fw-semibold" style="min-width: 45px;">
+                                            @nota.PorcentajeCalificacion.ToString("F0")%
+                                        </span>
+                                    </div>
+                                </td>
+                                <td class="align-middle d-none d-md-table-cell"><span class="badge bg-secondary">#@nota.NumeroIntento</span></td>
+                                <td class="align-middle d-none d-md-table-cell small text-muted">@nota.FechaIntento.ToString("dd/MM/yyyy HH:mm")</td>
                             </tr>
                         }
                     </tbody>
@@ -144,34 +215,34 @@
 @if (ClasesMasTomadas.Any())
 {
     <div class="mb-4">
-        <h5 class="fw-semibold mb-3">Clases más tomadas</h5>
-        <div class="card border-0 shadow-sm">
-            <div class="table-responsive">
-                <table class="table table-hover mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Curso</th>
-                            <th>Total inscritos</th>
-                            <th>% Completados</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var clase in ClasesMasTomadas)
-                        {
-                            <tr>
-                                <td class="align-middle fw-semibold">@clase.TituloCurso</td>
-                                <td class="align-middle">@clase.TotalInscritos</td>
-                                <td class="align-middle">
-                                    <div class="progress" style="height: 8px; min-width: 80px;">
-                                        <div class="progress-bar bg-info" style="width: @(clase.PorcentajeCompletados)%;"></div>
-                                    </div>
-                                    <small class="text-muted">@clase.PorcentajeCompletados.ToString("F1")%</small>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+        <div class="d-flex align-items-center mb-3">
+            <h5 class="fw-semibold mb-0">🏆 Cursos Más Populares</h5>
+            <span class="badge bg-success ms-2">@ClasesMasTomadas.Count() cursos</span>
+        </div>
+        <div class="row g-3">
+            @foreach (var clase in ClasesMasTomadas.Take(6))
+            {
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <h6 class="card-title fw-semibold text-truncate" title="@clase.TituloCurso">@clase.TituloCurso</h6>
+                            <div class="row g-2 text-center mt-3">
+                                <div class="col-6">
+                                    <div class="small text-muted">Inscritos</div>
+                                    <div class="h5 mb-0 fw-bold text-primary">@clase.TotalInscritos</div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="small text-muted">Completados</div>
+                                    <div class="h5 mb-0 fw-bold text-success">@clase.PorcentajeCompletados.ToString("F0")%</div>
+                                </div>
+                            </div>
+                            <div class="progress mt-3" style="height: 10px;">
+                                <div class="progress-bar bg-success" style="width: @(clase.PorcentajeCompletados)%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
     </div>
 }
@@ -179,30 +250,57 @@
 @if (MejoresEstudiantes.Any())
 {
     <div class="mb-4">
-        <h5 class="fw-semibold mb-3">Mejores estudiantes</h5>
+        <div class="d-flex align-items-center mb-3">
+            <h5 class="fw-semibold mb-0">⭐ Ranking de Mejores Estudiantes</h5>
+            <span class="badge bg-warning ms-2">@MejoresEstudiantes.Count() estudiantes</span>
+        </div>
         <div class="card border-0 shadow-sm">
             <div class="table-responsive">
                 <table class="table table-hover mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th>#</th>
-                            <th>Nombre</th>
-                            <th>Promedio</th>
-                            <th>Intentos</th>
-                            <th class="d-none d-md-table-cell">Cursos completados</th>
+                            <th style="width: 5%;">#</th>
+                            <th style="width: 40%;">Nombre</th>
+                            <th style="width: 20%;">Promedio</th>
+                            <th class="d-none d-md-table-cell" style="width: 15%;">Intentos</th>
+                            <th class="d-none d-lg-table-cell" style="width: 20%;">Cursos Completados</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var (est, idx) in MejoresEstudiantes.Select((e, i) => (e, i + 1)))
+                        @foreach (var est in MejoresEstudiantes.Take(10).Select((e, i) => new { Estudiante = e, Idx = i + 1 }))
                         {
-                            <tr>
-                                <td class="align-middle fw-bold text-muted">@(est.Posicion > 0 ? est.Posicion : idx)</td>
-                                <td class="align-middle fw-semibold">@est.NombreEstudiante</td>
-                                <td class="align-middle">
-                                    <span class="badge bg-primary">@est.PromedioCalificacion.ToString("F1")</span>
+                            <tr class="@(est.Idx <= 3 ? (est.Idx == 1 ? "table-warning bg-warning-light" : est.Idx == 2 ? "table-info bg-info-light" : "table-success bg-success-light") : "")">
+                                <td class="align-middle fw-bold text-center">
+                                    @if (est.Idx == 1)
+                                    {
+                                        <span class="badge bg-warning text-dark fs-6">🥇</span>
+                                    }
+                                    else if (est.Idx == 2)
+                                    {
+                                        <span class="badge bg-info fs-6">🥈</span>
+                                    }
+                                    else if (est.Idx == 3)
+                                    {
+                                        <span class="badge bg-success fs-6">🥉</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">@est.Idx</span>
+                                    }
                                 </td>
-                                <td class="align-middle">@est.TotalIntentos</td>
-                                <td class="align-middle d-none d-md-table-cell">@est.CursosCompletados</td>
+                                <td class="align-middle fw-semibold">@est.Estudiante.NombreEstudiante</td>
+                                <td class="align-middle">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="progress flex-grow-1" style="height: 6px;">
+                                            <div class="progress-bar bg-primary" style="width: @(est.Estudiante.PromedioCalificacion)%;"></div>
+                                        </div>
+                                        <span class="badge bg-primary fw-semibold">@est.Estudiante.PromedioCalificacion.ToString("F1")</span>
+                                    </div>
+                                </td>
+                                <td class="align-middle d-none d-md-table-cell">@est.Estudiante.TotalIntentos</td>
+                                <td class="align-middle d-none d-lg-table-cell">
+                                    <span class="badge bg-success">@est.Estudiante.CursosCompletados</span>
+                                </td>
                             </tr>
                         }
                     </tbody>

@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  clases:
+    build:
+      context: ./Clases
+      dockerfile: Dockerfile
+    container_name: svc-clases
+    network_mode: host
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5021
+      - ConnectionStrings__UserDb=Host=localhost;Port=5433;Database=user_db;Username=user_user;Password=user_pass
+      - ConnectionStrings__ContentDb=Host=localhost;Port=5432;Database=content_db;Username=content_user;Password=content_pass
+
+  estadisticas:
+    build:
+      context: ./Estadisticas
+      dockerfile: Dockerfile
+    container_name: svc-estadisticas
+    network_mode: host
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5022
+      - ConnectionStrings__UserDb=Host=localhost;Port=5433;Database=user_db;Username=user_user;Password=user_pass
+      - ConnectionStrings__ContentDb=Host=localhost;Port=5432;Database=content_db;Username=content_user;Password=content_pass
+
+  cuestionarios:
+    build:
+      context: ./Cuestionarios
+      dockerfile: Dockerfile
+    container_name: svc-cuestionarios
+    network_mode: host
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5023
+      - ConnectionStrings__UserDb=Host=localhost;Port=5433;Database=user_db;Username=user_user;Password=user_pass
+      - ConnectionStrings__ContentDb=Host=localhost;Port=5432;Database=content_db;Username=content_user;Password=content_pass

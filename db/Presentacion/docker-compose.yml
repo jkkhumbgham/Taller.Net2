@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  presentacion:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: presentacion
+    network_mode: host
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_HTTP_PORTS=5030
+      - Arquitecturas__Monolitico__GrpcUrl=http://localhost:5001
+      - Arquitecturas__Servicios__ClasesUrl=http://localhost:5021
+      - Arquitecturas__Servicios__EstadisticasUrl=http://localhost:5022
+      - Arquitecturas__Servicios__CuestionariosUrl=http://localhost:5023
+      - Arquitecturas__MicroServicios__NotasUrl=http://localhost:5010
+      - Arquitecturas__MicroServicios__CursosAcabadosUrl=http://localhost:5011
+      - Arquitecturas__MicroServicios__ClasesMasTomadosUrl=http://localhost:5012
+      - Arquitecturas__MicroServicios__MejoresEstudiantesUrl=http://localhost:5013

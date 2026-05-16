@@ -1,0 +1,245 @@
+/* Custom Dashboard Styles */
+
+:root {
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --success-gradient: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+    --warning-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    --info-gradient: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+}
+
+/* Gradient Cards */
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white;
+}
+
+.bg-gradient-success {
+    background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%) !important;
+}
+
+.bg-gradient-warning {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%) !important;
+}
+
+/* Dashboard Tables */
+.table-success-light {
+    background-color: rgba(25, 135, 84, 0.1) !important;
+}
+
+.table-warning-light {
+    background-color: rgba(255, 193, 7, 0.1) !important;
+}
+
+.table-danger-light {
+    background-color: rgba(220, 53, 69, 0.1) !important;
+}
+
+.bg-success-light {
+    background-color: rgba(25, 135, 84, 0.05);
+}
+
+.bg-info-light {
+    background-color: rgba(23, 162, 184, 0.05);
+}
+
+.bg-warning-light {
+    background-color: rgba(255, 193, 7, 0.1);
+}
+
+/* Card Shadows */
+.card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Badges */
+.badge {
+    font-size: 0.85rem;
+    padding: 0.45rem 0.65rem;
+}
+
+/* Progress Bars */
+.progress {
+    background-color: #e9ecef;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    transition: width 0.6s ease;
+}
+
+/* Alert Styles */
+.alert-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-color: #667eea;
+    color: white;
+}
+
+.alert-primary .text-muted {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Input Groups */
+.input-group {
+    border-radius: 0.375rem;
+    overflow: hidden;
+}
+
+.input-group .form-control {
+    border-right: none;
+}
+
+.input-group .btn {
+    border-left: none;
+}
+
+/* Navigation Tabs */
+.nav-tabs {
+    border: none;
+    gap: 0.5rem;
+}
+
+.nav-tabs .nav-link {
+    border: 2px solid transparent;
+    border-radius: 0.5rem;
+    color: #6c757d;
+    transition: all 0.3s ease;
+}
+
+.nav-tabs .nav-link:hover {
+    background-color: #f8f9fa;
+    color: #495057;
+}
+
+.nav-tabs .nav-link.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-color: transparent;
+    color: white;
+}
+
+/* Spinners */
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+    border-width: 0.2rem;
+}
+
+/* Dashboard Grid */
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Hero Section */
+.dashboard-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+    border-radius: 0.5rem;
+}
+
+/* Stats Card Animation */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: slideInUp 0.5s ease-out;
+}
+
+/* Table Responsive */
+.table {
+    font-size: 0.95rem;
+}
+
+.table thead th {
+    border-bottom: 2px solid #dee2e6;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+/* Responsive Padding */
+.container-fluid {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+@media (min-width: 992px) {
+    .container-fluid {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}
+
+/* Smooth Transitions */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Tooltip Styles */
+[data-bs-toggle="tooltip"] {
+    cursor: help;
+}
+
+/* Badge Styles */
+.badge {
+    font-weight: 500;
+    padding: 0.5rem 0.75rem;
+}
+
+/* Link Styles */
+a {
+    color: #667eea;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6c757d;
+}
+
+.empty-state svg {
+    width: 4rem;
+    height: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+/* Loading Animation */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.loading {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}

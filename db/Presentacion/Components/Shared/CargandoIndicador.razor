@@ -1,0 +1,21 @@
+@if (!string.IsNullOrEmpty(Mensaje))
+{
+    <div class="d-flex align-items-center gap-2 my-3">
+        <div class="spinner-border spinner-border-sm text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        <span class="text-muted">@Mensaje</span>
+    </div>
+}
+else
+{
+    <div class="d-flex justify-content-center my-4">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public string Mensaje { get; set; } = string.Empty;
+}

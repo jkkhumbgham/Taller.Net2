@@ -1,42 +1,18 @@
 {
   "version": 2,
-  "dgSpecHash": "qI+DkI0Dbs4=",
+  "dgSpecHash": "+l1qV2FRfsU=",
   "success": true,
-  "projectFilePath": "/home/jkkhumbgham/Documentos/Taller.Net2/Presentacion/Presentacion.csproj",
+  "projectFilePath": "C:\\Users\\jlaur\\Downloads\\Taller.Net2\\Presentacion\\Presentacion.csproj",
   "expectedPackageFiles": [
-    "/home/jkkhumbgham/.nuget/packages/google.protobuf/3.29.3/google.protobuf.3.29.3.nupkg.sha512",
-    "/home/jkkhumbgham/.nuget/packages/grpc.core.api/2.67.0/grpc.core.api.2.67.0.nupkg.sha512",
-    "/home/jkkhumbgham/.nuget/packages/grpc.net.client/2.67.0/grpc.net.client.2.67.0.nupkg.sha512",
-    "/home/jkkhumbgham/.nuget/packages/grpc.net.clientfactory/2.67.0/grpc.net.clientfactory.2.67.0.nupkg.sha512",
-    "/home/jkkhumbgham/.nuget/packages/grpc.net.common/2.67.0/grpc.net.common.2.67.0.nupkg.sha512",
-    "/home/jkkhumbgham/.nuget/packages/grpc.tools/2.67.0/grpc.tools.2.67.0.nupkg.sha512",
-    "/home/jkkhumbgham/.nuget/packages/microsoft.aspnetcore.app.internal.assets/10.0.4/microsoft.aspnetcore.app.internal.assets.10.0.4.nupkg.sha512",
-    "/home/jkkhumbgham/.nuget/packages/microsoft.extensions.dependencyinjection/6.0.0/microsoft.extensions.dependencyinjection.6.0.0.nupkg.sha512",
-    "/home/jkkhumbgham/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/6.0.0/microsoft.extensions.dependencyinjection.abstractions.6.0.0.nupkg.sha512",
-    "/home/jkkhumbgham/.nuget/packages/microsoft.extensions.http/6.0.0/microsoft.extensions.http.6.0.0.nupkg.sha512",
-    "/home/jkkhumbgham/.nuget/packages/microsoft.extensions.logging/6.0.0/microsoft.extensions.logging.6.0.0.nupkg.sha512",
-    "/home/jkkhumbgham/.nuget/packages/microsoft.extensions.logging.abstractions/6.0.0/microsoft.extensions.logging.abstractions.6.0.0.nupkg.sha512",
-    "/home/jkkhumbgham/.nuget/packages/microsoft.extensions.objectpool/6.0.16/microsoft.extensions.objectpool.6.0.16.nupkg.sha512",
-    "/home/jkkhumbgham/.nuget/packages/microsoft.extensions.options/6.0.0/microsoft.extensions.options.6.0.0.nupkg.sha512",
-    "/home/jkkhumbgham/.nuget/packages/microsoft.extensions.primitives/6.0.0/microsoft.extensions.primitives.6.0.0.nupkg.sha512",
-    "/home/jkkhumbgham/.nuget/packages/system.security.cryptography.pkcs/6.0.1/system.security.cryptography.pkcs.6.0.1.nupkg.sha512",
-    "/home/jkkhumbgham/.nuget/packages/system.security.cryptography.xml/6.0.1/system.security.cryptography.xml.6.0.1.nupkg.sha512",
-    "/home/jkkhumbgham/.nuget/packages/system.servicemodel.http/8.0.0/system.servicemodel.http.8.0.0.nupkg.sha512",
-    "/home/jkkhumbgham/.nuget/packages/system.servicemodel.primitives/8.0.0/system.servicemodel.primitives.8.0.0.nupkg.sha512",
-    "/home/jkkhumbgham/.nuget/packages/microsoft.aspnetcore.app.ref/10.0.4/microsoft.aspnetcore.app.ref.10.0.4.nupkg.sha512"
+    "C:\\Users\\jlaur\\.nuget\\packages\\google.protobuf\\3.29.3\\google.protobuf.3.29.3.nupkg.sha512",
+    "C:\\Users\\jlaur\\.nuget\\packages\\grpc.core.api\\2.67.0\\grpc.core.api.2.67.0.nupkg.sha512",
+    "C:\\Users\\jlaur\\.nuget\\packages\\grpc.net.client\\2.67.0\\grpc.net.client.2.67.0.nupkg.sha512",
+    "C:\\Users\\jlaur\\.nuget\\packages\\grpc.net.clientfactory\\2.67.0\\grpc.net.clientfactory.2.67.0.nupkg.sha512",
+    "C:\\Users\\jlaur\\.nuget\\packages\\grpc.net.common\\2.67.0\\grpc.net.common.2.67.0.nupkg.sha512",
+    "C:\\Users\\jlaur\\.nuget\\packages\\grpc.tools\\2.67.0\\grpc.tools.2.67.0.nupkg.sha512",
+    "C:\\Users\\jlaur\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.7\\microsoft.aspnetcore.app.internal.assets.10.0.7.nupkg.sha512",
+    "C:\\Users\\jlaur\\.nuget\\packages\\system.servicemodel.http\\8.0.0\\system.servicemodel.http.8.0.0.nupkg.sha512",
+    "C:\\Users\\jlaur\\.nuget\\packages\\system.servicemodel.primitives\\8.0.0\\system.servicemodel.primitives.8.0.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1903",
-      "level": "Warning",
-      "message": "El paquete \"System.Security.Cryptography.Pkcs\" 6.0.1 tiene una vulnerabilidad de gravedad alta conocida, https://github.com/advisories/GHSA-555c-2p6r-68mm",
-      "projectPath": "/home/jkkhumbgham/Documentos/Taller.Net2/Presentacion/Presentacion.csproj",
-      "warningLevel": 1,
-      "filePath": "/home/jkkhumbgham/Documentos/Taller.Net2/Presentacion/Presentacion.csproj",
-      "libraryId": "System.Security.Cryptography.Pkcs",
-      "targetGraphs": [
-        "net10.0"
-      ]
-    }
-  ]
+  "logs": []
 }

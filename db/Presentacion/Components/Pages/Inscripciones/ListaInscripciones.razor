@@ -1,0 +1,96 @@
+@page "/inscripciones"
+@rendermode InteractiveServer
+
+<PageTitle>Inscripciones - E-Learning Admin</PageTitle>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">Inscripciones</h1>
+    <button class="btn btn-primary" @onclick="MostrarFormularioNuevo">+ Nueva inscripción</button>
+</div>
+
+<MensajeAlerta Type="success" Mensaje="@MensajeExito" Visible="@(!string.IsNullOrEmpty(MensajeExito))" VisibleChanged="@(_ => MensajeExito = string.Empty)" />
+<MensajeAlerta Type="danger" Mensaje="@MensajeError" Visible="@(!string.IsNullOrEmpty(MensajeError))" VisibleChanged="@(_ => MensajeError = string.Empty)" />
+
+@if (MostrarFormulario)
+{
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header fw-semibold">Nueva inscripción</div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-12 col-sm-5">
+                    <label class="form-label">ID Usuario</label>
+                    <input type="number" class="form-control" @bind="NuevoUsuarioId" min="1" placeholder="ID del usuario" />
+                </div>
+                <div class="col-12 col-sm-5">
+                    <label class="form-label">ID Curso</label>
+                    <input type="number" class="form-control" @bind="NuevoCursoId" min="1" placeholder="ID del curso" />
+                </div>
+                <div class="col-12 col-sm-2 d-flex align-items-end gap-2">
+                    <button class="btn btn-primary" @onclick="CrearInscripcion" disabled="@Guardando">
+                        @if (Guardando)
+                        {
+                            <span class="spinner-border spinner-border-sm me-1"></span>
+                        }
+                        Crear
+                    </button>
+                    <button class="btn btn-outline-secondary" @onclick="CancelarFormulario">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Cargando)
+{
+    <CargandoIndicador Mensaje="Cargando inscripciones..." />
+}
+else if (!Inscripciones.Any())
+{
+    <div class="alert alert-info">No hay inscripciones registradas.</div>
+}
+else
+{
+    <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Usuario ID</th>
+                        <th>Curso ID</th>
+                        <th>Progreso</th>
+                        <th class="d-none d-md-table-cell">Inscrito</th>
+                        <th class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var inscripcion in Inscripciones)
+                    {
+                        <tr>
+                            <td class="align-middle text-muted small">@inscripcion.Id</td>
+                            <td class="align-middle">@inscripcion.UsuarioId</td>
+                            <td class="align-middle">@inscripcion.CursoId</td>
+                            <td class="align-middle" style="min-width: 140px;">
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar @BarraColor(inscripcion.Progreso)" style="width: @(inscripcion.Progreso)%;"></div>
+                                </div>
+                                <small class="text-muted">@inscripcion.Progreso.ToString("F1")%</small>
+                            </td>
+                            <td class="align-middle d-none d-md-table-cell small text-muted">@inscripcion.InscritoEn.ToString("dd/MM/yyyy")</td>
+                            <td class="align-middle text-end">
+                                <button class="btn btn-sm btn-outline-danger" @onclick="() => ConfirmarEliminar(inscripcion)">Eliminar</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+<ConfirmacionDialog
+    Visible="@MostrarConfirmacion"
+    Titulo="Eliminar inscripción"
+    Mensaje="@($"¿Está seguro de que desea eliminar la inscripción #{InscripcionAEliminar?.Id}?")"
+    OnConfirmar="EliminarInscripcion"
+    OnCancelar="CancelarEliminar" />
