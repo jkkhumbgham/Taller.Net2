@@ -21,8 +21,8 @@ builder.Services.AddScoped<IServicioMejoresEstudiantes, ServicioMejoresEstudiant
 // Health checks — usados en pruebas de disponibilidad (Taller 4)
 builder.Services.AddHealthChecks();
 
-app.MapHealthChecks("/health");
 var app = builder.Build();
 
+app.MapHealthChecks("/health");
 app.MapControllers();
 app.Run();
