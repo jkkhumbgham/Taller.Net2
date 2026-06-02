@@ -14,44 +14,62 @@ public class ServicioMejoresEstudiantes : IServicioMejoresEstudiantes
 
     public async Task<IEnumerable<MejorEstudianteDto>> ObtenerMejoresEstudiantesAsync()
     {
-        var todosIntentos = await _repo.ObtenerTodosLosIntentosAsync();
-        var intentosList = todosIntentos.ToList();
+        var intentos = (await _repo.ObtenerTodosLosIntentosAsync()).ToList();
 
-        var todosUsuarios = await _repo.ObtenerTodosLosUsuariosAsync();
-        var usuariosDict = todosUsuarios.ToDictionary(u => u.Id);
+        var usuarios = (await _repo.ObtenerTodosLosUsuariosAsync())
+            .ToDictionary(u => u.Id);
 
-        var todasInscripciones = await _repo.ObtenerTodasLasInscripcionesAsync();
-        var inscripcionesList = todasInscripciones.ToList();
-
-        return intentosList
+        var cursosCompletadosPorUsuario =
+            (await _repo.ObtenerTodasLasInscripcionesAsync())
+            .Where(i => i.Progress >= 100)
             .GroupBy(i => i.UserId)
-            .Select(g =>
+            .ToDictionary(
+                g => g.Key,
+                g => g.Count());
+
+        var resultado = new List<MejorEstudianteDto>();
+
+        foreach (var grupo in intentos.GroupBy(i => i.UserId))
+        {
+            usuarios.TryGetValue(grupo.Key, out var usuario);
+
+            var listaIntentos = grupo.ToList();
+
+            var promedio = listaIntentos
+                .Where(i => i.MaxScore > 0)
+                .Select(i => (i.Score / i.MaxScore) * 100)
+                .DefaultIfEmpty(0)
+                .Average();
+
+            cursosCompletadosPorUsuario.TryGetValue(
+                grupo.Key,
+                out var cursosCompletados);
+
+            resultado.Add(new MejorEstudianteDto
             {
-                usuariosDict.TryGetValue(g.Key, out var usuario);
-                var intentosGrupo = g.ToList();
-                var promedio = intentosGrupo.Where(i => i.MaxScore > 0)
-                    .Select(i => (i.Score / i.MaxScore) * 100)
-                    .DefaultIfEmpty(0)
-                    .Average();
-                var cursosCompletados = inscripcionesList.Count(i => i.UserId == g.Key && i.Progress >= 100);
-                return new MejorEstudianteDto
-                {
-                    Posicion = 0,
-                    IdEstudiante = g.Key,
-                    NombreEstudiante = usuario?.Name ?? $"Estudiante {g.Key}",
-                    PromedioCalificacion = Math.Round(promedio, 2),
-                    TotalIntentos = intentosGrupo.Count,
-                    CursosCompletados = cursosCompletados
-                };
+                Posicion = 0,
+                IdEstudiante = grupo.Key,
+                NombreEstudiante = usuario?.Name ?? $"Estudiante {grupo.Key}",
+                PromedioCalificacion = Math.Round(promedio, 2),
+                TotalIntentos = listaIntentos.Count,
+                CursosCompletados = cursosCompletados
+            });
+        }
+
+        return resultado
+            .OrderByDescending(x => x.PromedioCalificacion)
+            .Select((x, index) =>
+            {
+                x.Posicion = index + 1;
+                return x;
             })
-            .OrderByDescending(e => e.PromedioCalificacion)
-            .Select((e, index) => { e.Posicion = index + 1; return e; })
             .ToList();
     }
 
     public async Task<IEnumerable<MejorEstudianteDto>> ObtenerTopMejoresEstudiantesAsync(int n)
     {
-        var todos = await ObtenerMejoresEstudiantesAsync();
-        return todos.Take(n).ToList();
+        return (await ObtenerMejoresEstudiantesAsync())
+            .Take(n)
+            .ToList();
     }
 }

@@ -15,28 +15,48 @@ public class ServicioCursosAcabados : IServicioCursosAcabados
     public async Task<IEnumerable<CursoAcabadoDto>?> ObtenerCursosAcabadosEstudianteAsync(int userId)
     {
         var usuario = await _repo.ObtenerUsuarioPorIdAsync(userId);
-        if (usuario == null) return null;
+
+        if (usuario == null)
+            return null;
 
         var inscripciones = await _repo.ObtenerInscripcionesPorUsuarioAsync(userId);
-        var completadas = inscripciones.Where(i => i.Progress >= 100).ToList();
 
-        var resultado = new List<CursoAcabadoDto>();
+        var completadas = inscripciones
+            .Where(i => i.Progress >= 100)
+            .ToList();
+
+        var resultado = new List<CursoAcabadoDto>(completadas.Count);
+
         foreach (var inscripcion in completadas)
         {
-            var curso = await _repo.ObtenerCursoPorIdAsync(inscripcion.CourseId);
-            var lecciones = await _repo.ObtenerLeccionesPorCursoAsync(inscripcion.CourseId);
-            var leccionesList = lecciones.ToList();
-            var lessonIds = leccionesList.Select(l => l.Id).ToList();
-            var progresos = await _repo.ObtenerProgresosPorUsuarioYLeccionesAsync(userId, lessonIds);
-            var tiempoTotal = progresos.Sum(p => p.TimeSpent);
+            var cursoTask =
+                _repo.ObtenerCursoPorIdAsync(inscripcion.CourseId);
+
+            var leccionesTask =
+                _repo.ObtenerLeccionesPorCursoAsync(inscripcion.CourseId);
+
+            await Task.WhenAll(cursoTask, leccionesTask);
+
+            var curso = cursoTask.Result;
+
+            var lecciones = leccionesTask.Result.ToList();
+
+            var lessonIds = lecciones
+                .Select(x => x.Id)
+                .ToList();
+
+            var progresos =
+                await _repo.ObtenerProgresosPorUsuarioYLeccionesAsync(
+                    userId,
+                    lessonIds);
 
             resultado.Add(new CursoAcabadoDto
             {
                 IdCurso = inscripcion.CourseId,
                 TituloCurso = curso?.Title ?? $"Curso {inscripcion.CourseId}",
                 FechaInscripcion = inscripcion.EnrolledAt,
-                TotalLecciones = leccionesList.Count,
-                TiempoTotalSegundos = tiempoTotal
+                TotalLecciones = lecciones.Count,
+                TiempoTotalSegundos = progresos.Sum(x => x.TimeSpent)
             });
         }
 
@@ -46,16 +66,19 @@ public class ServicioCursosAcabados : IServicioCursosAcabados
     public async Task<TotalCursosAcabadosDto?> ObtenerTotalCursosAcabadosAsync(int userId)
     {
         var usuario = await _repo.ObtenerUsuarioPorIdAsync(userId);
-        if (usuario == null) return null;
 
-        var inscripciones = await _repo.ObtenerInscripcionesPorUsuarioAsync(userId);
-        var total = inscripciones.Count(i => i.Progress >= 100);
+        if (usuario == null)
+            return null;
+
+        var inscripciones =
+            await _repo.ObtenerInscripcionesPorUsuarioAsync(userId);
 
         return new TotalCursosAcabadosDto
         {
             IdEstudiante = usuario.Id,
             Nombre = usuario.Name,
-            TotalCursosAcabados = total
+            TotalCursosAcabados =
+                inscripciones.Count(x => x.Progress >= 100)
         };
     }
 }

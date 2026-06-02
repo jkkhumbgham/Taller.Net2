@@ -1,0 +1,5 @@
+"Servicio","Peticiones","Exitosas","PctExito","Promedio_ms","P95_ms","Resultado"
+"Notas","20","20","100%","128.42","420.48","✅ Aprobado"
+"MejoresEstudiantes","20","20","100%","108.78","263.82","✅ Aprobado"
+"ClasesMasTomadas","20","20","100%","209.59","740.48","✅ Aprobado"
+"CursosAcabados","20","20","100%","232.18","443.99","✅ Aprobado"

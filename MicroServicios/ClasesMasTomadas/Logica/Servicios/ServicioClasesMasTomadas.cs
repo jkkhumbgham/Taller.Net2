@@ -14,36 +14,44 @@ public class ServicioClasesMasTomadas : IServicioClasesMasTomadas
 
     public async Task<IEnumerable<ClaseMasTomadaDto>> ObtenerClasesMasTomadas()
     {
-        var inscripciones = await _repo.ObtenerTodasLasInscripcionesAsync();
-        var inscripcionesList = inscripciones.ToList();
+        var inscripciones = (await _repo.ObtenerTodasLasInscripcionesAsync()).ToList();
 
-        var courseIds = inscripcionesList.Select(i => i.CourseId).Distinct().ToList();
-        var cursos = await _repo.ObtenerCursosPorIdsAsync(courseIds);
-        var cursosDict = cursos.ToDictionary(c => c.Id);
+        if (!inscripciones.Any())
+            return Enumerable.Empty<ClaseMasTomadaDto>();
 
-        return inscripcionesList
-            .GroupBy(i => i.CourseId)
-            .Select(g =>
+        var cursos = (await _repo.ObtenerCursosPorIdsAsync(
+                inscripciones.Select(i => i.CourseId).Distinct()))
+            .ToDictionary(c => c.Id);
+
+        var resultado = new List<ClaseMasTomadaDto>();
+
+        foreach (var grupo in inscripciones.GroupBy(i => i.CourseId))
+        {
+            var total = grupo.Count();
+            var completados = grupo.Count(i => i.Progress >= 100);
+
+            cursos.TryGetValue(grupo.Key, out var curso);
+
+            resultado.Add(new ClaseMasTomadaDto
             {
-                cursosDict.TryGetValue(g.Key, out var curso);
-                var total = g.Count();
-                var completados = g.Count(i => i.Progress >= 100);
-                var porcentaje = total > 0 ? Math.Round((double)completados / total * 100, 2) : 0;
-                return new ClaseMasTomadaDto
-                {
-                    IdCurso = g.Key,
-                    TituloCurso = curso?.Title ?? $"Curso {g.Key}",
-                    TotalInscritos = total,
-                    PorcentajeCompletados = porcentaje
-                };
-            })
-            .OrderByDescending(c => c.TotalInscritos)
+                IdCurso = grupo.Key,
+                TituloCurso = curso?.Title ?? $"Curso {grupo.Key}",
+                TotalInscritos = total,
+                PorcentajeCompletados = total == 0
+                    ? 0
+                    : Math.Round((double)completados * 100 / total, 2)
+            });
+        }
+
+        return resultado
+            .OrderByDescending(x => x.TotalInscritos)
             .ToList();
     }
 
     public async Task<IEnumerable<ClaseMasTomadaDto>> ObtenerTopClasesMasTomadas(int n)
     {
-        var todas = await ObtenerClasesMasTomadas();
-        return todas.Take(n).ToList();
+        return (await ObtenerClasesMasTomadas())
+            .Take(n)
+            .ToList();
     }
 }

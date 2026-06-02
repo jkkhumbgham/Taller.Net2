@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   content_db:
     image: postgres:16
@@ -42,48 +40,72 @@ services:
       context: ./Notas
       dockerfile: Dockerfile
     container_name: micro-notas
-    network_mode: host
+    depends_on:
+      user_db:
+        condition: service_healthy
+      content_db:
+        condition: service_healthy
+    ports:
+      - "5010:5010"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=http://+:5010
-      - ConnectionStrings__UserDb=Host=localhost;Port=5433;Database=user_db;Username=user_user;Password=user_pass
-      - ConnectionStrings__ContentDb=Host=localhost;Port=5432;Database=content_db;Username=content_user;Password=content_pass
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:5010
+      ConnectionStrings__UserDb: Host=user_db;Port=5432;Database=user_db;Username=user_user;Password=user_pass
+      ConnectionStrings__ContentDb: Host=content_db;Port=5432;Database=content_db;Username=content_user;Password=content_pass
 
   cursos-acabados:
     build:
       context: ./CursosAcabados
       dockerfile: Dockerfile
     container_name: micro-cursos-acabados
-    network_mode: host
+    depends_on:
+      user_db:
+        condition: service_healthy
+      content_db:
+        condition: service_healthy
+    ports:
+      - "5011:5011"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=http://+:5011
-      - ConnectionStrings__UserDb=Host=localhost;Port=5433;Database=user_db;Username=user_user;Password=user_pass
-      - ConnectionStrings__ContentDb=Host=localhost;Port=5432;Database=content_db;Username=content_user;Password=content_pass
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:5011
+      ConnectionStrings__UserDb: Host=user_db;Port=5432;Database=user_db;Username=user_user;Password=user_pass
+      ConnectionStrings__ContentDb: Host=content_db;Port=5432;Database=content_db;Username=content_user;Password=content_pass
 
   clases-mas-tomadas:
     build:
       context: ./ClasesMasTomadas
       dockerfile: Dockerfile
     container_name: micro-clases-mas-tomadas
-    network_mode: host
+    depends_on:
+      user_db:
+        condition: service_healthy
+      content_db:
+        condition: service_healthy
+    ports:
+      - "5012:5012"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=http://+:5012
-      - ConnectionStrings__UserDb=Host=localhost;Port=5433;Database=user_db;Username=user_user;Password=user_pass
-      - ConnectionStrings__ContentDb=Host=localhost;Port=5432;Database=content_db;Username=content_user;Password=content_pass
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:5012
+      ConnectionStrings__UserDb: Host=user_db;Port=5432;Database=user_db;Username=user_user;Password=user_pass
+      ConnectionStrings__ContentDb: Host=content_db;Port=5432;Database=content_db;Username=content_user;Password=content_pass
 
   mejores-estudiantes:
     build:
       context: ./MejoresEstudiantes
       dockerfile: Dockerfile
     container_name: micro-mejores-estudiantes
-    network_mode: host
+    depends_on:
+      user_db:
+        condition: service_healthy
+      content_db:
+        condition: service_healthy
+    ports:
+      - "5013:5013"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=http://+:5013
-      - ConnectionStrings__UserDb=Host=localhost;Port=5433;Database=user_db;Username=user_user;Password=user_pass
-      - ConnectionStrings__ContentDb=Host=localhost;Port=5432;Database=content_db;Username=content_user;Password=content_pass
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:5013
+      ConnectionStrings__UserDb: Host=user_db;Port=5432;Database=user_db;Username=user_user;Password=user_pass
+      ConnectionStrings__ContentDb: Host=content_db;Port=5432;Database=content_db;Username=content_user;Password=content_pass
 
 volumes:
   content_db_data:

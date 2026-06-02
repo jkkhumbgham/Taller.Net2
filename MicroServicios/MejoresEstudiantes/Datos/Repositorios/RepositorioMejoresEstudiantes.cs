@@ -15,16 +15,22 @@ public class RepositorioMejoresEstudiantes : IRepositorioMejoresEstudiantes
 
     public async Task<IEnumerable<IntentoCuestionario>> ObtenerTodosLosIntentosAsync()
     {
-        return await _userContext.QuizAttempts.ToListAsync();
+        return await _userContext.QuizAttempts
+            .AsNoTracking()
+            .ToListAsync();
     }
 
     public async Task<IEnumerable<Usuario>> ObtenerTodosLosUsuariosAsync()
     {
-        return await _userContext.Users.ToListAsync();
+        return await _userContext.Users
+            .AsNoTracking()
+            .ToListAsync();
     }
 
     public async Task<IEnumerable<Inscripcion>> ObtenerTodasLasInscripcionesAsync()
     {
-        return await _userContext.Enrollments.ToListAsync();
+        return await _userContext.Enrollments
+            .AsNoTracking()
+            .ToListAsync();
     }
 }
