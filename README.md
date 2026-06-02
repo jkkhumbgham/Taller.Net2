@@ -4,6 +4,7 @@ Sistema que genera estadísticas de estudiantes sobre los cursos que toman y han
 
 ---
 
+
 ## Índice
 
 1. [Bases de datos](#bases-de-datos)
