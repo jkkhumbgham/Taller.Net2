@@ -18,6 +18,10 @@ builder.Services.AddDbContext<ContentDbContext>(options =>
 builder.Services.AddScoped<IRepositorioMejoresEstudiantes, RepositorioMejoresEstudiantes>();
 builder.Services.AddScoped<IServicioMejoresEstudiantes, ServicioMejoresEstudiantes>();
 
+// Health checks — usados en pruebas de disponibilidad (Taller 4)
+builder.Services.AddHealthChecks();
+
+app.MapHealthChecks("/health");
 var app = builder.Build();
 
 app.MapControllers();
