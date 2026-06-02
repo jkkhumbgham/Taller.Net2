@@ -664,3 +664,199 @@ dotnet build MicroServicios/MicroServicios.slnx
 | MicroServicios | MejoresEstudiantes | **5013** |
 | Bases de datos | content_db (PostgreSQL) | **5432** |
 | Bases de datos | user_db (PostgreSQL) | **5433** |
+
+---
+ 
+## Taller No. 4 — Pruebas Técnicas .NET
+ 
+Esta sección documenta las pruebas realizadas para el Taller 4, siguiendo el mismo esquema del taller JEE: disponibilidad, escalabilidad, usabilidad y aceptación.
+ 
+Los archivos de prueba están en la carpeta `Pruebas/`:
+ 
+```
+Pruebas/
+├── Disponibilidad/
+│   ├── Disponibilidad.Tests.csproj
+│   └── DisponibilidadTests.cs          ← Punto 1A: pruebas de disponibilidad (xUnit)
+├── Usabilidad/
+│   ├── Usabilidad.Tests.csproj
+│   └── UsabilidadTests.cs              ← Punto 2: pruebas de usabilidad (xUnit)
+├── Aceptacion/
+│   ├── Aceptacion.Tests.csproj
+│   └── AceptacionTests.cs              ← Punto 3: pruebas de aceptación (xUnit)
+└── Scripts/
+    └── EscalabilidadTest.ps1           ← Punto 1B: prueba de escalabilidad (PowerShell)
+```
+ 
+---
+ 
+### Punto 1 — Disponibilidad y Escalabilidad
+ 
+#### Módulos probados
+ 
+| Microservicio        | Puerto | Endpoint principal                        | Propósito                                      |
+|----------------------|--------|-------------------------------------------|------------------------------------------------|
+| Notas                | 5010   | GET /api/notas/estudiante/1               | Validar que las calificaciones son accesibles  |
+| CursosAcabados       | 5011   | GET /api/cursos-acabados/estudiante/1     | Validar que los cursos completados responden   |
+| ClasesMasTomadas     | 5012   | GET /api/clases-mas-tomadas               | Validar el ranking de cursos populares         |
+| MejoresEstudiantes   | 5013   | GET /api/mejores-estudiantes              | Validar el ranking de estudiantes              |
+ 
+Un módulo se considera **disponible** si:
+- Responde con código HTTP `200`, `201` o `204`
+- El tiempo de respuesta es **menor a 2 segundos**
+#### Parte A — Disponibilidad (xUnit)
+ 
+**Prerrequisito:** los 4 microservicios deben estar corriendo (ver Guía de comandos arriba).
+ 
+```bash
+# Ejecutar todas las pruebas de disponibilidad
+cd Pruebas/Disponibilidad
+dotnet test --logger "console;verbosity=normal"
+ 
+# Ver output detallado de cada prueba
+dotnet test -v detailed
+```
+ 
+Pruebas incluidas (IDs DIS-01 a DIS-09):
+ 
+| ID     | Módulo             | Qué verifica                                      |
+|--------|--------------------|---------------------------------------------------|
+| DIS-01 | Notas              | /api/notas/estudiante/1 devuelve HTTP 200         |
+| DIS-02 | Notas              | Responde en menos de 2 segundos                   |
+| DIS-03 | Notas              | /promedio devuelve HTTP 200 en menos de 2s        |
+| DIS-04 | CursosAcabados     | /api/cursos-acabados/estudiante/1 → HTTP 200      |
+| DIS-05 | CursosAcabados     | /total → HTTP 200 en menos de 2s                  |
+| DIS-06 | ClasesMasTomadas   | /api/clases-mas-tomadas → HTTP 200                |
+| DIS-07 | ClasesMasTomadas   | /top/5 → HTTP 200 en menos de 2s                  |
+| DIS-08 | MejoresEstudiantes | /api/mejores-estudiantes → HTTP 200               |
+| DIS-09 | MejoresEstudiantes | /top/5 → HTTP 200 en menos de 2s                  |
+ 
+#### Parte B — Escalabilidad (PowerShell)
+ 
+Equivalente al script PowerShell del taller JEE. Lanza **500 peticiones concurrentes** contra los 4 microservicios y reporta: total, exitosas, % éxito, tiempo promedio y P95.
+ 
+```powershell
+# Ejecutar con 500 peticiones (por defecto)
+cd Pruebas/Scripts
+.\EscalabilidadTest.ps1
+ 
+# Ejecutar con 100 peticiones (para prueba rápida)
+.\EscalabilidadTest.ps1 -Concurrencia 100
+```
+ 
+El script genera automáticamente un archivo CSV con los resultados:
+`resultados_escalabilidad_YYYYMMDD_HHmmss.csv`
+ 
+Criterio de aprobación: **≥ 95% de peticiones exitosas**.
+ 
+Ejemplo de salida esperada:
+ 
+```
+Servicio              Peticiones  Exitosas  PctExito  Promedio_ms  P95_ms   Resultado
+--------------------  ----------  --------  --------  -----------  -------  -----------
+Notas                 500         500       100%      312.4        589.1    ✅ Aprobado
+CursosAcabados        500         500       100%      287.2        541.8    ✅ Aprobado
+ClasesMasTomadas      500         500       100%      198.6        423.7    ✅ Aprobado
+MejoresEstudiantes    500         500       100%      241.3        487.2    ✅ Aprobado
+```
+ 
+---
+ 
+### Punto 2 — Usabilidad
+ 
+Evalúa que la API devuelva respuestas claras, navegables, con retroalimentación adecuada y formato consistente.
+ 
+#### Criterios evaluados
+ 
+| Criterio          | Qué se revisa                                                              |
+|-------------------|----------------------------------------------------------------------------|
+| Claridad          | Los campos JSON son autoexplicativos (nombre, nota, curso, etc.)           |
+| Navegación        | Los endpoints de detalle son accesibles por ID                             |
+| Retroalimentación | Los errores devuelven HTTP 404 con mensaje `{ "mensaje": "..." }` legible  |
+| Consistencia      | Todos los endpoints devuelven `Content-Type: application/json`             |
+ 
+#### Casos de prueba
+ 
+| ID    | Módulo             | Acción                                    | Resultado esperado                              |
+|-------|--------------------|-------------------------------------------|-------------------------------------------------|
+| US-01 | Notas              | GET /api/notas/estudiante/1               | JSON con campos de calificación reconocibles    |
+| US-02 | Notas              | GET /promedio                             | Respuesta con valor numérico identificable      |
+| US-03 | CursosAcabados     | GET /estudiante/1                         | Endpoint accesible por ID de estudiante         |
+| US-04 | CursosAcabados     | GET /estudiante/99999 (inexistente)       | HTTP 404 con `{ "mensaje": "..." }`             |
+| US-05 | Notas              | GET /notas/estudiante/99999 (inexistente) | HTTP 404 con `{ "mensaje": "..." }`             |
+| US-06 | Todos              | GET cualquier endpoint principal          | Content-Type: application/json en todos         |
+| US-07 | ClasesMasTomadas   | GET /api/clases-mas-tomadas               | Lista con campo de nombre de curso              |
+| US-08 | MejoresEstudiantes | GET /api/mejores-estudiantes              | Lista con campo de identificación de estudiante |
+ 
+#### Ejecutar pruebas de usabilidad
+ 
+```bash
+cd Pruebas/Usabilidad
+dotnet test --logger "console;verbosity=normal"
+```
+ 
+---
+ 
+### Punto 3 — Aceptación
+ 
+Verifica que el sistema cumple los criterios funcionales esperados por el usuario final.
+ 
+#### Criterios de aceptación por módulo
+ 
+| Módulo             | Criterio de aceptación                                                  |
+|--------------------|-------------------------------------------------------------------------|
+| Notas              | Debe devolver calificaciones reales cargadas en la BD de prueba         |
+| CursosAcabados     | Debe procesar la consulta del estudiante 1 sin errores                  |
+| ClasesMasTomadas   | Debe devolver el ranking completo y respetar el límite N del /top/{n}   |
+| MejoresEstudiantes | Debe devolver un ranking no vacío y respetar el límite del /top/{n}     |
+ 
+#### Casos de prueba
+ 
+| ID    | Caso                                        | Pasos                                      | Resultado esperado                          | Estado    |
+|-------|---------------------------------------------|--------------------------------------------|---------------------------------------------|-----------|
+| AC-01 | Notas — calificaciones reales               | GET /notas/estudiante/1                    | Array con ≥1 calificación de la BD          | Aceptado  |
+| AC-02 | ClasesMasTomadas — límite /top/{n}          | GET /clases-mas-tomadas/top/1, /3, /5      | Devuelve ≤ N elementos                      | Aceptado  |
+| AC-03 | MejoresEstudiantes — ranking no vacío       | GET /mejores-estudiantes                   | Array con ≥1 estudiante                     | Aceptado  |
+| AC-04 | MejoresEstudiantes — top 5                  | GET /mejores-estudiantes/top/5             | Entre 1 y 5 estudiantes                     | Aceptado  |
+| AC-05 | CursosAcabados — procesa estudiante 1       | GET /cursos-acabados/estudiante/1          | HTTP 200, body no vacío                     | Aceptado  |
+| AC-06 | CursosAcabados — total numérico             | GET /cursos-acabados/estudiante/1/total    | Body contiene valor numérico                | Aceptado  |
+| AC-07 | ClasesMasTomadas — ranking completo         | GET /clases-mas-tomadas                    | Array con ≥1 curso                          | Aceptado  |
+| AC-08 | Todos los módulos sin errores 5xx           | GET endpoint principal de cada módulo      | StatusCode < 500 en los 4 módulos           | Aceptado  |
+ 
+#### Ejecutar pruebas de aceptación
+ 
+```bash
+cd Pruebas/Aceptacion
+dotnet test --logger "console;verbosity=normal"
+```
+ 
+---
+ 
+### Ejecutar todas las pruebas de una vez
+ 
+```bash
+# Desde la raíz del proyecto
+dotnet test Pruebas/Disponibilidad/Disponibilidad.Tests.csproj --logger "console;verbosity=normal"
+dotnet test Pruebas/Usabilidad/Usabilidad.Tests.csproj         --logger "console;verbosity=normal"
+dotnet test Pruebas/Aceptacion/Aceptacion.Tests.csproj         --logger "console;verbosity=normal"
+ 
+# Y luego el script de escalabilidad
+cd Pruebas/Scripts
+.\EscalabilidadTest.ps1
+```
+ 
+> **Nota:** Todas las pruebas requieren que los microservicios estén en ejecución. Levántalos primero con `docker compose up --build -d` desde la carpeta `MicroServicios/`.
+ 
+### Modificaciones realizadas al código existente
+ 
+Se añadió `AddHealthChecks()` y `MapHealthChecks("/health")` en el `Program.cs` de los 4 microservicios para exponer el endpoint `/health` que verifica la disponibilidad del proceso. No se modifica ninguna lógica de negocio existente.
+ 
+| Archivo modificado                                    | Cambio                          |
+|-------------------------------------------------------|---------------------------------|
+| `MicroServicios/Notas/Program.cs`                     | + health check endpoint         |
+| `MicroServicios/CursosAcabados/Program.cs`            | + health check endpoint         |
+| `MicroServicios/ClasesMasTomadas/Program.cs`          | + health check endpoint         |
+| `MicroServicios/MejoresEstudiantes/Program.cs`        | + health check endpoint         |
+
+
+
